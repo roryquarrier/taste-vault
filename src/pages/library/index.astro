@@ -27,7 +27,7 @@ const familyMeta = families
         {cards.length} references across {familyMeta.length} aesthetic families.
       </p>
     </header>
-    <IngestForm client:visible families={familyMeta} />
+    <IngestForm client:load families={familyMeta} />
     <LibraryBrowser client:load cards={cards} families={familyMeta} />
   </section>
 </Base>
