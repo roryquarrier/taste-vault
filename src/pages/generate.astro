@@ -14,21 +14,25 @@ const familyData = families.map(f => ({
   guardrails: f.data.guardrails,
 })).sort((a, b) => families.find(f => f.id === a.id)!.data.order - families.find(f => f.id === b.id)!.data.order)
 
-const inspirationData = entries.map(e => ({
-  id: e.id,
-  title: e.data.title,
-  familyId: e.data.family as string,
-  familyName: families.find(f => f.id === (e.data.family as string))?.data.name ?? '',
-  description: e.data.description,
-  vocabulary: e.data.vocabulary,
-  intent: e.data.intent,
-  imageRecipe: {
-    subject: e.data.imageRecipe.subject,
-    medium: e.data.imageRecipe.medium,
-    palette: e.data.imageRecipe.palette,
-    aspect: e.data.imageRecipe.aspect,
-  },
-}))
+const inspirationData = entries.map(e => {
+  const famRef = e.data.family as unknown as { id: string } | string
+  const famId = typeof famRef === 'string' ? famRef : famRef?.id ?? ''
+  return {
+    id: e.id,
+    title: e.data.title,
+    familyId: famId,
+    familyName: families.find(f => f.id === famId)?.data.name ?? '',
+    description: e.data.description,
+    vocabulary: e.data.vocabulary,
+    intent: e.data.intent,
+    imageRecipe: {
+      subject: e.data.imageRecipe.subject,
+      medium: e.data.imageRecipe.medium,
+      palette: e.data.imageRecipe.palette,
+      aspect: e.data.imageRecipe.aspect,
+    },
+  }
+})
 ---
 
 <Base title="generate · taste-vault" description="Build a master design prompt from the library.">

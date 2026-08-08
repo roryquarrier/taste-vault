@@ -163,10 +163,29 @@ It must appear in the hero and repeat at the end of the page.`)
   const prompt = useMemo(() => buildPrompt(), [productName, productType, conversionGoal, messaging, guardAlways, guardNever, numVersions, directions, tokenContract])
 
   function updateDirection(num: number, field: string, value: string) {
-    setDirections(prev => ({
-      ...prev,
-      [num]: { ...prev[num], [field]: value }
-    }))
+    setDirections(prev => {
+      const next = { ...prev, [num]: { ...prev[num], [field]: value } }
+      // When reference is set, auto-fill family from the inspiration
+      if (field === 'inspirationId' && value) {
+        const insp = inspirations.find(x => x.id === value)
+        if (insp && !next[num].familyId) {
+          next[num].familyId = insp.familyId
+        }
+      }
+      return next
+    })
+  }
+
+  // When family changes manually, clear reference if it doesn't belong
+  function updateFamily(num: number, familyId: string) {
+    setDirections(prev => {
+      const next = { ...prev, [num]: { ...prev[num], familyId } }
+      const insp = inspirations.find(x => x.id === next[num].inspirationId)
+      if (insp && insp.familyId !== familyId) {
+        next[num].inspirationId = ''
+      }
+      return next
+    })
   }
 
   async function copyPrompt() {
@@ -244,7 +263,7 @@ It must appear in the hero and repeat at the end of the page.`)
               <div className="tv-pb-grid2">
                 <div className="tv-pb-field">
                   <span>Aesthetic Family (from library)</span>
-                  <select value={d.familyId} onChange={e => updateDirection(num, 'familyId', e.target.value)} className="tv-pb-input tv-select-trigger">
+                  <select value={d.familyId} onChange={e => updateFamily(num, e.target.value)} className="tv-pb-input tv-select-trigger">
                     <option value="">— custom —</option>
                     {families.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                   </select>
