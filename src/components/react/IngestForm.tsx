@@ -49,7 +49,7 @@ export default function IngestForm({ families }: Props) {
           </p>
 
           <div className="tv-ingest-row">
-            <label className="tv-pb-field">
+            <div className="tv-pb-field">
               <span>Source</span>
               <select value={source} onChange={e => setSource(e.target.value as typeof source)} className="tv-pb-input tv-select-trigger">
                 <option value="x">X / Twitter</option>
@@ -58,10 +58,10 @@ export default function IngestForm({ families }: Props) {
                 <option value="web">Other website</option>
                 <option value="screenshot">Screenshot (hermes-drop)</option>
               </select>
-            </label>
+            </div>
 
             {source !== 'screenshot' && (
-              <label className="tv-pb-field" style="flex: 2">
+              <div className="tv-pb-field" style={{flex: 2}}>
                 <span>URL</span>
                 <input
                   type="url"
@@ -70,19 +70,19 @@ export default function IngestForm({ families }: Props) {
                   placeholder="https://..."
                   className="tv-pb-input"
                 />
-              </label>
+              </div>
             )}
           </div>
 
-          <label className="tv-pb-field">
+          <div className="tv-pb-field">
             <span>Suggested family (optional — AI will decide if blank)</span>
             <select value={suggestedFamily} onChange={e => setSuggestedFamily(e.target.value)} className="tv-pb-input tv-select-trigger">
               <option value="">— AI decides —</option>
               {families.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
             </select>
-          </label>
+          </div>
 
-          <label className="tv-pb-field">
+          <div className="tv-pb-field">
             <span>Notes (what you like about it)</span>
             <textarea
               value={notes}
@@ -91,7 +91,7 @@ export default function IngestForm({ families }: Props) {
               placeholder="e.g. love the colour palette and the typography hierarchy"
               className="tv-pb-input tv-pb-textarea"
             />
-          </label>
+          </div>
 
           <div className="tv-ingest-actions">
             <button type="button" className="tv-btn" onClick={copySubmission}>
