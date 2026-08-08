@@ -27,15 +27,16 @@ export default function FontSelect({ token, value, onChange }: Props) {
         <label>{token.label}</label>
       </div>
       <Select.Root
-        value={known ? value : undefined}
+        value={known ? value : ''}
         onValueChange={(next) => {
-          loadFont(FONT_BY_STACK.get(next))
+          const font = FONT_BY_STACK.get(next)
+          if (font) loadFont(font)
           onChange(next)
         }}
       >
         <Select.Trigger className="tv-select-trigger" aria-label={token.label}>
           <Select.Value placeholder="custom">
-            {known ? FONT_BY_STACK.get(value)!.label : 'custom'}
+            {known && FONT_BY_STACK.has(value) ? FONT_BY_STACK.get(value)!.label : 'custom'}
           </Select.Value>
           <Select.Icon>▾</Select.Icon>
         </Select.Trigger>

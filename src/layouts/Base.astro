@@ -78,7 +78,11 @@ const { title = 'taste-vault', description = 'A vault of aesthetic references an
     color: var(--tv-accent);
   }
   main {
-    padding: calc(var(--tv-space-unit) * 8);
+    padding: calc(var(--tv-space-unit) * 6) calc(var(--tv-space-unit) * 8);
+  }
+  /* When a page has the tweaks panel, add right padding so content isn't hidden */
+  main:has(.tv-panel) {
+    padding-right: 340px;
   }
   a {
     color: inherit;
