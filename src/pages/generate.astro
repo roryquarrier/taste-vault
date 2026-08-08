@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import PromptBuilder from '../components/react/PromptBuilder.tsx'
+
+const families = await getCollection('families')
+const entries = await getCollection('inspirations', ({ data }) => !data.draft)
+
+const familyData = families.map(f => ({
+  id: f.id,
+  name: f.data.name,
+  description: f.data.description,
+  vocabulary: f.data.vocabulary,
+  guardrails: f.data.guardrails,
+})).sort((a, b) => families.find(f => f.id === a.id)!.data.order - families.find(f => f.id === b.id)!.data.order)
+
+const inspirationData = entries.map(e => ({
+  id: e.id,
+  title: e.data.title,
+  familyId: e.data.family as string,
+  familyName: families.find(f => f.id === (e.data.family as string))?.data.name ?? '',
+  description: e.data.description,
+  vocabulary: e.data.vocabulary,
+}))
+---
+
+<Base title="generate · taste-vault" description="Build a master design prompt from the library.">
+  <section style="display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 6)">
+    <header>
+      <h1 class="text-h1 tracking-h1 leading-h1 font-heading">Generate</h1>
+      <p class="text-body leading-body text-fg-muted" style="max-width: var(--tv-measure)">
+        Fill in your product details and pick aesthetic directions from the library.
+        Copy the generated prompt into your AI tool — one shot, five variations, no AI slop.
+      </p>
+    </header>
+    <PromptBuilder client:load families={familyData} inspirations={inspirationData} />
+  </section>
+</Base>

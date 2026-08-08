@@ -449,3 +449,189 @@
 .tv-panel-all input[type="checkbox"] {
   accent-color: var(--tv-accent);
 }
+
+/* ---------------------------------------------------------------------------
+   PROMPT BUILDER + INGEST FORM
+   --------------------------------------------------------------------------- */
+
+.tv-prompt-builder {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 8);
+}
+
+.tv-pb-section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-pb-section-title {
+  font-family: var(--tv-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-fg-muted);
+  margin: 0;
+  padding-bottom: calc(var(--tv-space-unit) * 2);
+  border-bottom: var(--tv-border-width) solid var(--tv-border);
+}
+
+.tv-pb-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-pb-field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 1.5);
+}
+
+.tv-pb-field > span {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--tv-fg-muted);
+  text-transform: uppercase;
+}
+
+.tv-pb-input {
+  width: 100%;
+  padding: calc(var(--tv-space-unit) * 2.5) calc(var(--tv-space-unit) * 3);
+  background: var(--tv-bg);
+  color: var(--tv-fg);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  font-family: var(--tv-font-mono);
+  font-size: 0.8125rem;
+}
+.tv-pb-input:focus { outline: none; border-color: var(--tv-accent); }
+.tv-pb-input::placeholder { color: var(--tv-fg-muted); opacity: 0.6; }
+.tv-pb-input:disabled { opacity: 0.4; }
+
+.tv-pb-textarea {
+  resize: vertical;
+  min-height: 3rem;
+  font-family: var(--tv-font-body);
+  line-height: var(--tv-body-leading);
+}
+
+.tv-pb-hint {
+  font-family: var(--tv-font-body);
+  font-size: 0.8125rem;
+  color: var(--tv-fg-muted);
+  margin: 0;
+}
+
+.tv-pb-direction {
+  background: var(--tv-surface);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  padding: calc(var(--tv-space-unit) * 4);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-pb-direction-header {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-pb-direction-num {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tv-bg);
+  background: var(--tv-accent);
+  padding: calc(var(--tv-space-unit) * 1) calc(var(--tv-space-unit) * 3);
+  border-radius: var(--tv-radius);
+}
+
+.tv-pb-direction-fam {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  color: var(--tv-fg-muted);
+}
+
+.tv-pb-output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-pb-output {
+  background: var(--tv-bg);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  padding: calc(var(--tv-space-unit) * 4);
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--tv-fg);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* --- Ingest form --- */
+.tv-ingest {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-ingest-body {
+  background: var(--tv-surface);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  padding: calc(var(--tv-space-unit) * 5);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-ingest-hint {
+  font-family: var(--tv-font-body);
+  font-size: 0.8125rem;
+  color: var(--tv-fg-muted);
+  margin: 0;
+}
+
+.tv-ingest-hint code {
+  font-family: var(--tv-font-mono);
+  font-size: 0.75rem;
+  color: var(--tv-accent);
+}
+
+.tv-ingest-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-ingest-actions {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tv-space-unit) * 3);
+  margin-top: calc(var(--tv-space-unit) * 2);
+}
+
+.tv-ingest-or {
+  font-family: var(--tv-font-mono);
+  font-size: 0.625rem;
+  color: var(--tv-fg-muted);
+}
+
+@media (max-width: 768px) {
+  .tv-pb-grid2, .tv-ingest-row {
+    grid-template-columns: 1fr;
+  }
+}

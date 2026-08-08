@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import LibraryBrowser from '../../components/react/LibraryBrowser'
+import IngestForm from '../../components/react/IngestForm.tsx'
 import { toCardData, familyIdOf } from '../../lib/cards'
 
 const families = await getCollection('families')
@@ -26,6 +27,7 @@ const familyMeta = families
         {cards.length} references across {familyMeta.length} aesthetic families.
       </p>
     </header>
+    <IngestForm client:visible families={familyMeta} />
     <LibraryBrowser client:load cards={cards} families={familyMeta} />
   </section>
 </Base>
