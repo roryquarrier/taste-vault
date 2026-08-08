@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  html { background: var(--tv-bg); color: var(--tv-fg); }
+  body { font-family: var(--tv-font-body); font-size: var(--tv-body-size); line-height: var(--tv-body-leading); }
+  h1 { font-family: var(--tv-font-heading); font-weight: var(--tv-h1-weight); }
+}
+
+/* ---------------------------------------------------------------------------
+   Shared library-card styles.
+
+   These live here rather than in Card.astro's scoped <style> because
+   LibraryBrowser.tsx renders a React mirror of Card.astro (an island cannot
+   render a .astro component). Sharing one stylesheet is what actually keeps the
+   two variants identical — see the comment in LibraryBrowser.tsx.
+   --------------------------------------------------------------------------- */
+
+/* [G6] spacing comes from raw var(--tv-space-unit), never a Tailwind spacing
+   utility. Dragging Space Unit must move this and must NOT move `p-4`. */
+.tv-vocab {
+  display: inline-block;
+  padding: calc(var(--tv-space-unit) * 1) calc(var(--tv-space-unit) * 2);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--tv-fg-muted);
+  white-space: nowrap;
+}
+
+.tv-card {
+  display: flex;
+  flex-direction: column;
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: var(--tv-surface);
+  text-decoration: none;
+  color: var(--tv-fg);
+  overflow: hidden;
+}
+.tv-card:hover { border-color: var(--tv-accent); }
+
+.tv-card-tile { aspect-ratio: 3 / 2; overflow: hidden; }
+.tv-card-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-card-tile--meta {
+  display: grid;
+  place-items: center;
+  background: var(--tv-bg);
+  border-bottom: var(--tv-border-width) solid var(--tv-border);
+}
+.tv-monogram {
+  font-family: var(--tv-font-heading);
+  font-size: 2.5rem;
+  font-weight: var(--tv-h1-weight);
+  letter-spacing: var(--tv-h1-tracking);
+  color: var(--tv-fg-muted);
+}
+.tv-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 2);
+  padding: calc(var(--tv-space-unit) * 4);
+}
+.tv-card-family,
+.tv-card-meta {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-fg-muted);
+  margin: 0;
+}
+.tv-card-title {
+  font-family: var(--tv-font-heading);
+  font-size: 1.25rem;
+  letter-spacing: var(--tv-h1-tracking);
+  margin: 0;
+}
+.tv-card-desc {
+  font-size: 0.875rem;
+  line-height: var(--tv-body-leading);
+  color: var(--tv-fg-muted);
+  margin: 0;
+}
+.tv-card-vocab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tv-space-unit) * 1);
+}
+
+.tv-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--tv-grid-gutter);
+}
+
+/* --- library browser chrome --- */
+.tv-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tv-space-unit) * 2);
+}
+.tv-tab {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 3);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: transparent;
+  color: var(--tv-fg-muted);
+  cursor: pointer;
+}
+.tv-tab[aria-pressed="true"] {
+  color: var(--tv-bg);
+  background: var(--tv-accent);
+  border-color: var(--tv-accent);
+}
+.tv-tab:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.tv-search {
+  width: 100%;
+  max-width: 28rem;
+  padding: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 3);
+  background: var(--tv-surface);
+  color: var(--tv-fg);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  font-family: var(--tv-font-mono);
+  font-size: 0.8125rem;
+}
+.tv-search:focus { outline: none; border-color: var(--tv-accent); }
+
+.tv-browser {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 5);
+}
+.tv-count {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-fg-muted);
+  margin: 0;
+}
+
+/* --- copy button --- */
+.tv-copy { display: inline-flex; align-items: stretch; gap: calc(var(--tv-space-unit) * 1); }
+.tv-btn {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 3);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: var(--tv-surface);
+  color: var(--tv-fg);
+  cursor: pointer;
+}
+.tv-btn:hover { border-color: var(--tv-accent); }
+.tv-btn[aria-pressed="true"] {
+  background: var(--tv-accent-2);
+  border-color: var(--tv-accent-2);
+  color: var(--tv-fg);
+}
+.tv-copy-status {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  color: var(--tv-accent);
+  align-self: center;
+  min-width: 5ch;
+}

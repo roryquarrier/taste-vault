@@ -1,0 +1,86 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title = 'taste-vault', description = 'A vault of aesthetic references and a live token panel.' } =
+  Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    {/* [7.4] Flash guard — MUST be the first child of <head>, before any stylesheet-
+        dependent paint. The `--tv-` prefix check is the injection guard. */}
+    <script is:inline>
+      try {
+        var raw = localStorage.getItem('taste-vault:tokens:v1')
+        if (raw) {
+          var p = JSON.parse(raw)
+          if (p && p.schemaVersion === 1 && p.tokens) {
+            for (var k in p.tokens)
+              if (k.indexOf('--tv-') === 0) document.documentElement.style.setProperty(k, p.tokens[k])
+          }
+        }
+      } catch (e) {}
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="tv-header">
+      <a href="/" class="tv-wordmark">taste&#8209;vault</a>
+      <nav>
+        <a href="/library">library</a>
+        <a href="/reference">reference</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <slot name="after" />
+  </body>
+</html>
+
+<style is:global>
+  .tv-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: calc(var(--tv-space-unit) * 4);
+    padding: calc(var(--tv-space-unit) * 4) calc(var(--tv-space-unit) * 8);
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+    font-family: var(--tv-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tv-header .tv-wordmark {
+    color: var(--tv-fg);
+    text-decoration: none;
+  }
+  .tv-header nav {
+    display: flex;
+    gap: calc(var(--tv-space-unit) * 5);
+  }
+  .tv-header nav a {
+    color: var(--tv-fg-muted);
+    text-decoration: none;
+  }
+  .tv-header nav a:hover {
+    color: var(--tv-accent);
+  }
+  main {
+    padding: calc(var(--tv-space-unit) * 8);
+  }
+  a {
+    color: inherit;
+  }
+</style>

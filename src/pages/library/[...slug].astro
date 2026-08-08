@@ -1,0 +1,167 @@
+---
+import { getCollection, getEntry, render } from 'astro:content'
+import { Image } from 'astro:assets'
+import Base from '../../layouts/Base.astro'
+import VocabTag from '../../components/astro/VocabTag.astro'
+import ImageRecipe from '../../components/astro/ImageRecipe.astro'
+import CopyButton from '../../components/react/CopyButton'
+import { familyIdOf } from '../../lib/cards'
+import { buildBriefBlock } from '../../lib/brief'
+import { buildImagePrompt } from '../../lib/imagePrompt'
+import { ACTIVE } from '../../tokens/defaults'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('inspirations', ({ data }) => !data.draft)
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }))
+}
+
+const { entry } = Astro.props
+const familyId = familyIdOf(entry)
+const family = await getEntry('families', familyId)
+if (!family) throw new Error(`[${entry.id}] unresolved family reference: ${familyId}`)
+
+const { Content } = await render(entry)
+
+const siteUrl = Astro.site?.href ?? 'https://tastevault.pages.dev'
+
+const brief = buildBriefBlock({
+  entry: {
+    id: entry.id,
+    title: entry.data.title,
+    description: entry.data.description,
+    vocabulary: entry.data.vocabulary,
+    intent: entry.data.intent,
+    guardrails: entry.data.guardrails,
+  },
+  family: {
+    id: family.id,
+    name: family.data.name,
+    description: family.data.description,
+    vocabulary: family.data.vocabulary,
+    guardrails: family.data.guardrails,
+  },
+  tokens: ACTIVE,
+  siteUrl,
+})
+
+const recipe = entry.data.imageRecipe
+const promptVariants = [
+  { key: 'natural', label: 'natural', text: buildImagePrompt(recipe, 'natural') },
+  { key: 'structured', label: 'structured', text: buildImagePrompt(recipe, 'structured') },
+]
+
+// [G7] the full image only enters the pipeline when the asset is publishable.
+const heroImage = entry.data.publishAsset ? (entry.data.full ?? entry.data.thumb) : undefined
+---
+
+<Base title={`${entry.data.title} · taste-vault`} description={entry.data.description}>
+  <article class="tv-detail">
+    <p class="tv-card-family">
+      <a href="/library">library</a> / {family.data.name}
+    </p>
+    <h1 class="text-h1 tracking-h1 leading-h1 font-heading">{entry.data.title}</h1>
+    <p class="tv-lede">{entry.data.description}</p>
+
+    <div class="tv-card-vocab">
+      {entry.data.vocabulary.map((v) => <VocabTag term={v} />)}
+    </div>
+
+    {
+      heroImage ? (
+        <div class="tv-graded tv-hero">
+          <Image src={heroImage} alt={entry.data.alt} width={1400} format="webp" />
+        </div>
+      ) : (
+        <p class="tv-card-meta">
+          metadata only · {entry.data.source.license} · no asset published for this reference
+        </p>
+      )
+    }
+
+    <section>
+      <h2 class="tv-h2">Intent</h2>
+      <p class="tv-body">{entry.data.intent}</p>
+    </section>
+
+    <section>
+      <h2 class="tv-h2">Guardrails</h2>
+      <div class="tv-guardrails">
+        <div>
+          <p class="tv-card-family">always</p>
+          <ul>{[...family.data.guardrails.always, ...entry.data.guardrails.always].map((g) => <li>{g}</li>)}</ul>
+        </div>
+        <div>
+          <p class="tv-card-family">never</p>
+          <ul>{[...family.data.guardrails.never, ...entry.data.guardrails.never].map((g) => <li>{g}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="tv-h2">Image recipe</h2>
+      <ImageRecipe recipe={recipe} />
+    </section>
+
+    <section class="tv-actions">
+      <CopyButton client:visible label="copy brief" text={brief} />
+      <CopyButton client:visible label="copy image prompt" variants={promptVariants} />
+    </section>
+
+    <section class="tv-prose">
+      <Content />
+    </section>
+  </article>
+</Base>
+
+<style>
+  .tv-detail {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 6);
+    max-width: 72rem;
+  }
+  .tv-lede,
+  .tv-body,
+  .tv-prose {
+    max-width: var(--tv-measure);
+    line-height: var(--tv-body-leading);
+    color: var(--tv-fg-muted);
+  }
+  .tv-h2 {
+    font-family: var(--tv-font-heading);
+    font-size: 1.5rem;
+    letter-spacing: var(--tv-h1-tracking);
+    margin: 0 0 calc(var(--tv-space-unit) * 3);
+    color: var(--tv-fg);
+  }
+  .tv-hero {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    overflow: hidden;
+  }
+  .tv-hero :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .tv-guardrails {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--tv-grid-gutter);
+  }
+  .tv-guardrails ul {
+    margin: calc(var(--tv-space-unit) * 2) 0 0;
+    padding-left: calc(var(--tv-space-unit) * 4);
+    color: var(--tv-fg-muted);
+    font-size: 0.875rem;
+    line-height: var(--tv-body-leading);
+  }
+  .tv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tv-grid-gutter);
+    padding: calc(var(--tv-space-unit) * 4) 0;
+    border-top: var(--tv-border-width) solid var(--tv-border);
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+  }
+</style>

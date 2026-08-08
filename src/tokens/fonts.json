@@ -1,0 +1,74 @@
+[
+  {
+    "id": "inter-tight",
+    "stack": "\"Inter Tight\", sans-serif",
+    "label": "Inter Tight",
+    "source": "google",
+    "family": "Inter Tight",
+    "weights": [400, 500, 700, 800],
+    "role": ["heading"]
+  },
+  {
+    "id": "inter",
+    "stack": "\"Inter\", sans-serif",
+    "label": "Inter",
+    "source": "google",
+    "family": "Inter",
+    "weights": [400, 500, 600, 700],
+    "role": ["body", "heading"]
+  },
+  {
+    "id": "jetbrains-mono",
+    "stack": "\"JetBrains Mono\", monospace",
+    "label": "JetBrains Mono",
+    "source": "google",
+    "family": "JetBrains Mono",
+    "weights": [400, 500, 700],
+    "role": ["mono"]
+  },
+  {
+    "id": "space-grotesk",
+    "stack": "\"Space Grotesk\", sans-serif",
+    "label": "Space Grotesk",
+    "source": "google",
+    "family": "Space Grotesk",
+    "weights": [400, 500, 700],
+    "role": ["heading", "body"]
+  },
+  {
+    "id": "ibm-plex-serif",
+    "stack": "\"IBM Plex Serif\", serif",
+    "label": "IBM Plex Serif",
+    "source": "google",
+    "family": "IBM Plex Serif",
+    "weights": [400, 500, 600, 700],
+    "role": ["heading", "body"]
+  },
+  {
+    "id": "dm-sans",
+    "stack": "\"DM Sans\", sans-serif",
+    "label": "DM Sans",
+    "source": "google",
+    "family": "DM Sans",
+    "weights": [400, 500, 700],
+    "role": ["body", "heading"]
+  },
+  {
+    "id": "newsreader",
+    "stack": "\"Newsreader\", serif",
+    "label": "Newsreader",
+    "source": "google",
+    "family": "Newsreader",
+    "weights": [300, 400, 500, 600],
+    "role": ["heading", "body"]
+  },
+  {
+    "id": "ibm-plex-mono",
+    "stack": "\"IBM Plex Mono\", monospace",
+    "label": "IBM Plex Mono",
+    "source": "google",
+    "family": "IBM Plex Mono",
+    "weights": [400, 500, 600],
+    "role": ["mono"]
+  }
+]

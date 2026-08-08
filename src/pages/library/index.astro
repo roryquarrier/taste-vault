@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import LibraryBrowser from '../../components/react/LibraryBrowser'
+import { toCardData, familyIdOf } from '../../lib/cards'
+
+const families = await getCollection('families')
+const familyNames = new Map(families.map((f) => [f.id, f.data.name]))
+
+const entries = await getCollection('inspirations', ({ data }) => !data.draft)
+const cards = await Promise.all(
+  entries.map((e) => toCardData(e, familyNames.get(familyIdOf(e)) ?? familyIdOf(e))),
+)
+cards.sort((a, b) => a.title.localeCompare(b.title))
+
+const familyMeta = families
+  .map((f) => ({ id: f.id, name: f.data.name, order: f.data.order }))
+  .sort((a, b) => a.order - b.order)
+---
+
+<Base title="library · taste-vault" description="Every aesthetic reference in the vault.">
+  <section style="display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 6)">
+    <header>
+      <h1 class="text-h1 tracking-h1 leading-h1 font-heading">Library</h1>
+      <p class="text-body leading-body text-fg-muted" style="max-width: var(--tv-measure)">
+        {cards.length} references across {familyMeta.length} aesthetic families.
+      </p>
+    </header>
+    <LibraryBrowser client:load cards={cards} families={familyMeta} />
+  </section>
+</Base>

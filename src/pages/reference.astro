@@ -1,0 +1,229 @@
+---
+import Base from '../layouts/Base.astro'
+import TweaksPanel from '../components/react/TweaksPanel.tsx'
+
+const title = 'Book Restorer — Reference Page'
+const description = 'Hand-built reference page for the tweaks panel. Every visual value comes from a token.'
+---
+
+<Base title={title} description={description}>
+  <div class="reference-page">
+    <!-- Hero section -->
+    <section class="hero tv-graded">
+      <div class="hero-content">
+        <p class="mono-label">PLATE I-A · REFERENCE</p>
+        <h1 class="hero-heading text-h1">Restore your books.</h1>
+        <p class="hero-sub">Upload a scanned PDF. Get a clean, digital copy in minutes.</p>
+        <div class="cta-row">
+          <button class="cta-primary">RESTORE NOW</button>
+          <a class="cta-secondary" href="/library">BROWSE STYLES →</a>
+        </div>
+      </div>
+      <div class="hero-image-slot">
+        <!-- Hero image placeholder — .tv-graded applies filter, grain, position -->
+        <div class="hero-placeholder">
+          <span class="placeholder-text">HERO IMAGE</span>
+          <span class="placeholder-sub">var(--tv-hero-filter) applies here</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Body section -->
+    <section class="body-section">
+      <div class="body-content">
+        <p class="mono-label">§1 · HOW IT WORKS</p>
+        <h2 class="text-h1" style="font-size: var(--tv-h1-size);">Three steps. Ten minutes.</h2>
+        
+        <div class="services-grid" style="gap: var(--tv-grid-gutter);">
+          <div class="service-card">
+            <p class="mono-label">01</p>
+            <h3>Upload</h3>
+            <p>Drop your scanned PDF. We extract every page.</p>
+          </div>
+          <div class="service-card">
+            <p class="mono-label">02</p>
+            <h3>Restore</h3>
+            <p>AI cleans each page. Text becomes selectable. Colour returns.</p>
+          </div>
+          <div class="service-card">
+            <p class="mono-label">03</p>
+            <h3>Download</h3>
+            <p>Clean PDF, ready to print or share. Done.</p>
+          </div>
+        </div>
+
+        <div class="measure-block">
+          <p class="mono-label">§2 · DETAIL</p>
+          <p>Every restored book goes through a multi-stage pipeline: page extraction, AI-driven restoration, OCR for selectable text, and PDF reassembly. The result is a clean, professional digital copy that looks better than the original.</p>
+          <p>Drag any slider in the panel to see how token changes affect this page in real time. Every visual value — font, size, colour, spacing, radius — comes from a CSS custom property defined in tokens.json.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="reference-footer">
+      <div class="footer-content">
+        <p class="mono-label">taste-vault · reference · schema v1</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- The tweaks panel — client:idle so it doesn't block LCP -->
+  <TweaksPanel client:idle />
+</Base>
+
+<style>
+  .reference-page {
+    min-height: 100vh;
+    background: var(--tv-bg);
+    color: var(--tv-fg);
+    font-family: var(--tv-font-body);
+    font-size: var(--tv-body-size);
+    line-height: var(--tv-body-leading);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 60vh;
+    padding: calc(var(--tv-space-unit) * 8);
+    gap: calc(var(--tv-space-unit) * 4);
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(var(--tv-space-unit) * 3);
+  }
+
+  .hero-heading {
+    font-family: var(--tv-font-heading);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: var(--tv-h1-leading);
+    max-width: var(--tv-measure);
+  }
+
+  .hero-sub {
+    color: var(--tv-fg-muted);
+    max-width: var(--tv-measure);
+  }
+
+  .cta-row {
+    display: flex;
+    gap: calc(var(--tv-space-unit) * 2);
+    align-items: center;
+  }
+
+  .cta-primary {
+    background: var(--tv-accent);
+    color: var(--tv-bg);
+    border: none;
+    border-radius: var(--tv-radius);
+    padding: calc(var(--tv-space-unit) * 3) calc(var(--tv-space-unit) * 5);
+    font-family: var(--tv-font-mono);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .cta-primary:hover { opacity: 0.85; }
+
+  .cta-secondary {
+    color: var(--tv-fg-muted);
+    text-decoration: none;
+    font-family: var(--tv-font-mono);
+    font-size: 0.875rem;
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+    padding-bottom: calc(var(--tv-space-unit) * 1);
+  }
+
+  .hero-image-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--tv-border-width) dashed var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    overflow: hidden;
+  }
+
+  .hero-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 1);
+    text-align: center;
+    color: var(--tv-fg-muted);
+  }
+  .placeholder-text {
+    font-family: var(--tv-font-mono);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+  }
+  .placeholder-sub {
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .mono-label {
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--tv-fg-muted);
+    margin: 0;
+  }
+
+  .body-section {
+    padding: calc(var(--tv-space-unit) * 8);
+  }
+
+  .body-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: calc(var(--tv-space-unit) * 6) 0;
+  }
+
+  .service-card {
+    background: var(--tv-surface);
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    padding: calc(var(--tv-space-unit) * 6);
+  }
+  .service-card h3 {
+    font-family: var(--tv-font-heading);
+    margin: calc(var(--tv-space-unit) * 2) 0;
+  }
+  .service-card p {
+    color: var(--tv-fg-muted);
+  }
+
+  .measure-block {
+    max-width: var(--tv-measure);
+  }
+  .measure-block p {
+    margin-bottom: calc(var(--tv-space-unit) * 4);
+  }
+
+  .reference-footer {
+    border-top: var(--tv-border-width) solid var(--tv-border);
+    padding: calc(var(--tv-space-unit) * 4) calc(var(--tv-space-unit) * 8);
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: calc(var(--tv-space-unit) * 4);
+    }
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

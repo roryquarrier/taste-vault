@@ -1,0 +1,98 @@
+[
+  {
+    "id": "print-tech-paper",
+    "schemaVersion": 1,
+    "name": "Print-Tech Paper",
+    "order": 1,
+    "description": "Newsprint grid meets terminal precision. Uncoated stock, tabular density, hairline rules.",
+    "vocabulary": ["newsprint grid", "monospace data", "halftone dither", "cold neutrals", "hairline rules", "tabular density", "uncoated stock", "editorial hierarchy"],
+    "guardrails": {
+      "always": ["maintain a visible baseline grid", "keep body measure under var(--tv-measure)", "set data in var(--tv-font-mono)"],
+      "never": ["drop shadows", "gradients", "rounded corners above var(--tv-radius)"]
+    }
+  },
+  {
+    "id": "vast-quiet-cinematic",
+    "schemaVersion": 1,
+    "name": "Vast Quiet Cinematic",
+    "order": 2,
+    "description": "Anamorphic stillness. Enormous negative space, a single subject, a horizon that does the talking.",
+    "vocabulary": ["wide horizon", "negative space", "anamorphic crop", "muted desaturation", "single focal point", "slow pacing", "atmospheric haze"],
+    "guardrails": {
+      "always": ["give the hero image at least 70vh", "hold one accent color only", "let type sit small against the frame"],
+      "never": ["competing focal points", "busy pattern fills", "saturated secondary colors"]
+    }
+  },
+  {
+    "id": "warm-analog-editorial",
+    "schemaVersion": 1,
+    "name": "Warm Analog Editorial",
+    "order": 3,
+    "description": "Film grain, ink-warm neutrals and a magazine spine. Reads like a well-printed quarterly.",
+    "vocabulary": ["film grain", "warm neutrals", "serif display", "generous leading", "pull quotes", "duotone photography", "asymmetric spread"],
+    "guardrails": {
+      "always": ["drive grain through var(--tv-grade-grain)", "pair a serif display with a quiet body face", "keep leading above 1.5"],
+      "never": ["pure #000 or #fff", "tight tracking on body copy", "cool blue casts"]
+    }
+  },
+  {
+    "id": "brutalist-utility",
+    "schemaVersion": 1,
+    "name": "Brutalist Utility",
+    "order": 4,
+    "description": "Unstyled HTML taken seriously. Visible structure, default-ish type, borders instead of shadows.",
+    "vocabulary": ["exposed structure", "hard borders", "system type", "left alignment", "flat color blocks", "raw links", "no ornament"],
+    "guardrails": {
+      "always": ["use borders at var(--tv-border-width)", "keep radius at zero or near-zero", "underline every link"],
+      "never": ["shadows", "gradients", "decorative illustration"]
+    }
+  },
+  {
+    "id": "soft-clinical",
+    "schemaVersion": 1,
+    "name": "Soft Clinical",
+    "order": 5,
+    "description": "Medical calm. High-key surfaces, ample padding, restrained blues and a single confident accent.",
+    "vocabulary": ["high-key light", "generous padding", "rounded surfaces", "restrained palette", "clear affordances", "quiet hierarchy"],
+    "guardrails": {
+      "always": ["keep contrast at or above WCAG AA", "pad with multiples of var(--tv-space-unit)", "state every control's status in words"],
+      "never": ["dense data tables without spacing", "more than two accents", "hard black text"]
+    }
+  },
+  {
+    "id": "archival-museum",
+    "schemaVersion": 1,
+    "name": "Archival Museum",
+    "order": 6,
+    "description": "Catalogue raisonné. Plate numbers, caption discipline, and objects floating on paper.",
+    "vocabulary": ["plate numbering", "caption discipline", "paper ground", "centered plates", "small caps", "wide margins", "letterpress weight"],
+    "guardrails": {
+      "always": ["caption every image with source and date", "hold wide outer margins", "number plates sequentially"],
+      "never": ["full-bleed imagery", "sans-serif captions", "hover animations on plates"]
+    }
+  },
+  {
+    "id": "neon-industrial",
+    "schemaVersion": 1,
+    "name": "Neon Industrial",
+    "order": 7,
+    "description": "Machine-shop dark with a signal-orange charge. Stencil type, hazard tape, technical readouts.",
+    "vocabulary": ["signal accent", "stencil type", "hazard striping", "dark metal ground", "technical readouts", "hard edge glow"],
+    "guardrails": {
+      "always": ["hold the accent to under 10% of the surface", "set readouts in mono", "keep the ground below #1A1A1C"],
+      "never": ["pastel tints", "soft blurred glows", "handwriting faces"]
+    }
+  },
+  {
+    "id": "organic-craft",
+    "schemaVersion": 1,
+    "name": "Organic Craft",
+    "order": 8,
+    "description": "Made by hand and photographed in daylight. Clay, linen, and type that breathes.",
+    "vocabulary": ["daylight photography", "earth pigments", "hand texture", "irregular edges", "humanist type", "breathing whitespace"],
+    "guardrails": {
+      "always": ["photograph on natural material grounds", "use humanist letterforms", "let images carry the texture"],
+      "never": ["synthetic gradients", "geometric grotesques", "high-gloss product renders"]
+    }
+  }
+]

@@ -1,0 +1,56 @@
+---
+import type { ImageRecipe } from '../../lib/imagePrompt'
+
+interface Props {
+  recipe: ImageRecipe
+}
+const { recipe } = Astro.props
+
+const rows: [string, string][] = [
+  ['subject', recipe.subject],
+  ['medium', recipe.medium],
+  ...(recipe.lighting ? ([['lighting', recipe.lighting]] as [string, string][]) : []),
+  ...(recipe.palette.length ? ([['palette', recipe.palette.join(', ')]] as [string, string][]) : []),
+  ...(recipe.composition ? ([['composition', recipe.composition]] as [string, string][]) : []),
+  ...(recipe.negative.length
+    ? ([['negative', recipe.negative.join(', ')]] as [string, string][])
+    : []),
+  ['aspect', recipe.aspect],
+]
+---
+
+<dl class="tv-recipe">
+  {
+    rows.map(([k, v]) => (
+      <>
+        <dt>{k}</dt>
+        <dd>{v}</dd>
+      </>
+    ))
+  }
+</dl>
+
+<style>
+  .tv-recipe {
+    display: grid;
+    grid-template-columns: minmax(6rem, max-content) 1fr;
+    gap: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 4);
+    margin: 0;
+    padding: calc(var(--tv-space-unit) * 4);
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+  }
+  .tv-recipe dt {
+    font-family: var(--tv-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tv-fg-muted);
+  }
+  .tv-recipe dd {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: var(--tv-body-leading);
+  }
+</style>

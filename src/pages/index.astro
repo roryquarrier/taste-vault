@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro'
+---
+
+<Base>
+  <section style="max-width: var(--tv-measure); display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 5)">
+    <h1 class="text-h1 tracking-h1 leading-h1 font-heading text-accent">taste-vault</h1>
+    <p class="text-body leading-body font-body text-fg-muted">
+      A vault of aesthetic references and a live token panel. Browse the library to pull a
+      generator brief for any reference, or open the reference page to tune every token in
+      the design system and export the result.
+    </p>
+    <p class="font-mono" style="display:flex; gap:calc(var(--tv-space-unit) * 6)">
+      <a class="text-accent-2" href="/library">/library</a>
+      <a class="text-accent-2" href="/reference">/reference</a>
+    </p>
+  </section>
+</Base>

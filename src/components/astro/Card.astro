@@ -1,0 +1,47 @@
+---
+import type { CardData } from '../../lib/cards'
+import VocabTag from './VocabTag.astro'
+
+interface Props {
+  card: CardData
+}
+const { card } = Astro.props
+const monogram = card.title
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((w) => w[0])
+  .join('')
+---
+
+<a class="tv-card" href={card.href}>
+  {
+    /* [G7] image === null ⇒ metadata-only variant. No <img>, no asset in the pipeline. */
+    card.image === null ? (
+      <div class="tv-card-tile tv-card-tile--meta">
+        <span class="tv-monogram">{monogram}</span>
+      </div>
+    ) : (
+      /* [G5] .tv-graded wrapper so the grade + hero tokens apply to this image. */
+      <div class="tv-card-tile tv-graded">
+        <img
+          src={card.image.src}
+          width={card.image.width}
+          height={card.image.height}
+          alt={card.image.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )
+  }
+  <div class="tv-card-body">
+    <p class="tv-card-family">{card.familyName}{card.featured && ' · featured'}</p>
+    <h3 class="tv-card-title">{card.title}</h3>
+    <p class="tv-card-desc">{card.description}</p>
+    <div class="tv-card-vocab">
+      {card.vocabulary.slice(0, 4).map((v) => <VocabTag term={v} />)}
+    </div>
+    {card.image === null && <p class="tv-card-meta">metadata only · {card.license}</p>}
+  </div>
+</a>
+
