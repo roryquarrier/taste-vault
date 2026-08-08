@@ -74,6 +74,21 @@ export default function TweaksPanel() {
     setTimeout(() => setStatus(''), 1500)
   }
 
+  function downloadCss() {
+    const css = exportCss(values, { all: exportAll, stamp: new Date().toISOString().slice(0, 10) })
+    const blob = new Blob([css], { type: 'text/css' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `taste-vault-styles-${new Date().toISOString().slice(0, 10)}.css`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    setStatus('downloaded')
+    setTimeout(() => setStatus(''), 1500)
+  }
+
   return (
     <aside className={`tv-panel${open ? '' : ' tv-panel--closed'}`} aria-label="Tweaks">
       <button type="button" className="tv-panel-toggle" onClick={() => setOpen((o) => !o)}>
@@ -111,14 +126,18 @@ export default function TweaksPanel() {
             <button type="button" className="tv-btn" onClick={() => copy('json')}>
               copy json
             </button>
-            <label className="tv-panel-all">
+            <button type="button" className="tv-btn tv-btn--download" onClick={downloadCss}>
+              download .css
+            </button>
+            <div className="tv-panel-all">
               <input
                 type="checkbox"
+                id="tv-export-all"
                 checked={exportAll}
                 onChange={(e) => setExportAll(e.target.checked)}
               />
-              export all
-            </label>
+              <span>export all</span>
+            </div>
             <span className="tv-copy-status" aria-live="polite">
               {status}
             </span>

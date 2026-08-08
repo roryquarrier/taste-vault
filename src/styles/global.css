@@ -164,6 +164,13 @@
   cursor: pointer;
 }
 .tv-btn:hover { border-color: var(--tv-accent); }
+.tv-btn--download {
+  background: var(--tv-accent);
+  color: var(--tv-bg);
+  border-color: var(--tv-accent);
+  font-weight: 700;
+}
+.tv-btn--download:hover { opacity: 0.85; }
 .tv-btn[aria-pressed="true"] {
   background: var(--tv-accent-2);
   border-color: var(--tv-accent-2);
