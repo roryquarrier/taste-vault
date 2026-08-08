@@ -8,6 +8,11 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
 ---
 
 <Base title={title} description={description}>
+  <!-- Variation Viewer at top: connect folder, browse generations -->
+  <section class="variation-section">
+    <VariationViewer client:visible />
+  </section>
+
   <div class="reference-page">
     <!-- Hero section -->
     <section class="hero">
@@ -109,11 +114,6 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
       </div>
     </footer>
   </div>
-
-  <!-- Variation Viewer: connect a folder of generated HTML files -->
-  <section class="variation-section">
-    <VariationViewer client:visible />
-  </section>
 
   <!-- The tweaks panel — client:idle so it doesn't block LCP -->
   <TweaksPanel client:idle />
