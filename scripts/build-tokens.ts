@@ -29,11 +29,17 @@ ${themeDecls}
 
 /* [G5] Grain consumption path. Any element with .tv-graded gets a noise overlay
    whose opacity is driven by --tv-grade-grain. filter() alone cannot do grain. */
-.tv-graded { position: relative; isolation: isolate; }
+.tv-graded { position: relative; isolation: isolate; overflow: hidden; }
 .tv-graded > img, .tv-graded > picture > img {
   object-position: var(--tv-hero-object-position);
   filter: var(--tv-hero-filter);
   transform: scale(var(--tv-hero-scale));
+}
+/* When no img is present, apply the filter to the container itself
+   so grade sliders (saturation, contrast, brightness, warmth) still
+   produce a visible change on placeholder backgrounds */
+.tv-graded:not(:has(> img)):not(:has(> picture > img)) {
+  filter: var(--tv-hero-filter);
 }
 .tv-graded::after {
   content: "";

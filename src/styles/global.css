@@ -324,12 +324,15 @@
 
 .tv-slider-thumb {
   display: block;
-  width: 14px;
-  height: 14px;
+  position: relative;
+  width: 16px;
+  height: 16px;
   background: var(--tv-fg);
+  border: 2px solid var(--tv-accent);
   border-radius: 50%;
   cursor: grab;
   transition: transform 0.1s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
 .tv-slider-thumb:hover { transform: scale(1.2); }
 .tv-slider-thumb:active { cursor: grabbing; transform: scale(1.1); }
