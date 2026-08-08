@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { EDITABLE } from '../../tokens/defaults'
 import { copyText } from '../../lib/clipboard'
 
@@ -10,22 +10,48 @@ type Props = {
   inspirations: Inspiration[]
 }
 
+function emptyDirection() {
+  return { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' }
+}
+
 export default function PromptBuilder({ families, inspirations }: Props) {
   // --- Selection state ---
-  const [directions, setDirections] = useState<Record<number, {
-    familyId: string
-    inspirationId: string
-    customAesthetic: string
-    customReference: string
-    futureHero: string
-    placement: string
-  }>>({
-    1: { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' },
-    2: { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' },
-    3: { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' },
-    4: { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' },
-    5: { familyId: '', inspirationId: '', customAesthetic: '', customReference: '', futureHero: '', placement: '' },
+  const [directions, setDirections] = useState<Record<number, ReturnType<typeof emptyDirection>>>({
+    1: emptyDirection(),
+    2: emptyDirection(),
+    3: emptyDirection(),
+    4: emptyDirection(),
+    5: emptyDirection(),
   })
+
+  // Pre-fill from library selections via ?refs=id1,id2
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const refs = params.get('refs')
+    if (!refs) return
+    const ids = refs.split(',').filter(Boolean).slice(0, 5)
+    if (!ids.length) return
+
+    setDirections(prev => {
+      const next = { ...prev }
+      ids.forEach((inspId, i) => {
+        const num = i + 1
+        const insp = inspirations.find(x => x.id === inspId)
+        if (insp) {
+          next[num] = {
+            ...emptyDirection(),
+            familyId: insp.familyId,
+            inspirationId: insp.id,
+          }
+        }
+      })
+      return next
+    })
+    // Auto-set numVersions to match
+    if (ids.length > 0) {
+      setNumVersions(Math.min(ids.length, 5))
+    }
+  }, [inspirations])
 
   // --- Master prompt fields ---
   const [productName, setProductName] = useState('')
@@ -120,49 +146,49 @@ It must appear in the hero and repeat at the end of the page.`)
       <section className="tv-pb-section">
         <h2 className="tv-pb-section-title">1 · Product</h2>
         <div className="tv-pb-grid2">
-          <label className="tv-pb-field">
+          <div className="tv-pb-field">
             <span>Product Name</span>
             <input type="text" value={productName} onChange={e => setProductName(e.target.value)}
               placeholder="e.g. Kestrel, Book Restorer" className="tv-pb-input" />
-          </label>
-          <label className="tv-pb-field">
+          </div>
+          <div className="tv-pb-field">
             <span>What is it?</span>
             <input type="text" value={productType} onChange={e => setProductType(e.target.value)}
               placeholder="e.g. AI analytics platform for small startups" className="tv-pb-input" />
-          </label>
-          <label className="tv-pb-field">
+          </div>
+          <div className="tv-pb-field">
             <span>Conversion Goal / CTA</span>
             <input type="text" value={conversionGoal} onChange={e => setConversionGoal(e.target.value)}
               placeholder="book a demo" className="tv-pb-input" />
-          </label>
-          <label className="tv-pb-field">
+          </div>
+          <div className="tv-pb-field">
             <span>Number of Versions</span>
             <select value={numVersions} onChange={e => setNumVersions(Number(e.target.value))} className="tv-pb-input tv-select-trigger">
               {[1,2,3,4,5].map(n => <option key={n} value={n}>{n}</option>)}
             </select>
-          </label>
+          </div>
         </div>
-        <label className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 3)"}}>
+        <div className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 3)"}}>
           <span>Messaging / Intent (what should it feel like and why)</span>
           <textarea value={messaging} onChange={e => setMessaging(e.target.value)}
             placeholder="Intelligence = calm and confident, not loud SaaS hype. A founder should think 'these people understand data' within 3 seconds."
             rows={3} className="tv-pb-input tv-pb-textarea" />
-        </label>
+        </div>
       </section>
 
       {/* Guardrails */}
       <section className="tv-pb-section">
         <h2 className="tv-pb-section-title">2 · Guardrails</h2>
-        <label className="tv-pb-field">
+        <div className="tv-pb-field">
           <span>ALWAYS (constants)</span>
           <textarea value={guardAlways} onChange={e => setGuardAlways(e.target.value)}
             rows={2} className="tv-pb-input tv-pb-textarea" />
-        </label>
-        <label className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 2)"}}>
+        </div>
+        <div className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 2)"}}>
           <span>NEVER (bans)</span>
           <textarea value={guardNever} onChange={e => setGuardNever(e.target.value)}
             rows={2} className="tv-pb-input tv-pb-textarea" />
-        </label>
+        </div>
       </section>
 
       {/* Per-direction blocks */}
@@ -179,39 +205,39 @@ It must appear in the hero and repeat at the end of the page.`)
                 {fam && <span className="tv-pb-direction-fam">{fam.name}</span>}
               </div>
               <div className="tv-pb-grid2">
-                <label className="tv-pb-field">
+                <div className="tv-pb-field">
                   <span>Aesthetic Family (from library)</span>
                   <select value={d.familyId} onChange={e => updateDirection(num, 'familyId', e.target.value)} className="tv-pb-input tv-select-trigger">
                     <option value="">— custom —</option>
                     {families.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                   </select>
-                </label>
-                <label className="tv-pb-field">
+                </div>
+                <div className="tv-pb-field">
                   <span>Reference (from library)</span>
                   <select value={d.inspirationId} onChange={e => updateDirection(num, 'inspirationId', e.target.value)} className="tv-pb-input tv-select-trigger" disabled={!d.familyId}>
                     <option value="">— none —</option>
                     {inspirationsForFamily(d.familyId).map(i => <option key={i.id} value={i.id}>{i.title}</option>)}
                   </select>
-                </label>
+                </div>
               </div>
               {!d.familyId && (
-                <label className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 2)"}}>
+                <div className="tv-pb-field" style={{marginTop: "calc(var(--tv-space-unit) * 2)"}}>
                   <span>Custom Aesthetic (5-8 vocabulary terms)</span>
                   <input type="text" value={d.customAesthetic} onChange={e => updateDirection(num, 'customAesthetic', e.target.value)}
                     placeholder="e.g. brutalist-editorial B&W, heavy dither, stark dark" className="tv-pb-input" />
-                </label>
+                </div>
               )}
               <div className="tv-pb-grid2" style={{marginTop: "calc(var(--tv-space-unit) * 2)"}}>
-                <label className="tv-pb-field">
+                <div className="tv-pb-field">
                   <span>Future Hero Image</span>
                   <input type="text" value={d.futureHero} onChange={e => updateDirection(num, 'futureHero', e.target.value)}
                     placeholder="e.g. vast desaturated aerial mountain ridge" className="tv-pb-input" />
-                </label>
-                <label className="tv-pb-field">
+                </div>
+                <div className="tv-pb-field">
                   <span>Placement</span>
                   <input type="text" value={d.placement} onChange={e => updateDirection(num, 'placement', e.target.value)}
                     placeholder="e.g. full-bleed, headline left on darkest area" className="tv-pb-input" />
-                </label>
+                </div>
               </div>
             </div>
           )

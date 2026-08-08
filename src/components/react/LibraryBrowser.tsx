@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import type { CardData } from '../../lib/cards'
 
@@ -9,17 +9,7 @@ type Props = {
   families: FamilyMeta[]
 }
 
-/**
- * React mirror of `src/components/astro/Card.astro`.
- *
- * An island cannot render a `.astro` component, so this markup is duplicated by
- * necessity. The two are kept identical by sharing every class name with the
- * `.tv-card*` rules in `src/styles/global.css` — if you change one, change the
- * other, and never move these styles into a scoped <style> block.
- *
- * [G7] `image === null` ⇒ metadata-only tile. No <img> is emitted at all.
- */
-function CardTile({ card }: { card: CardData }) {
+function CardTile({ card, selected, onToggle }: { card: CardData; selected: boolean; onToggle?: (id: string) => void }) {
   const monogram = card.title
     .split(/\s+/)
     .slice(0, 2)
@@ -27,48 +17,73 @@ function CardTile({ card }: { card: CardData }) {
     .join('')
 
   return (
-    <a className="tv-card" href={card.href}>
-      {card.image === null ? (
-        <div className="tv-card-tile tv-card-tile--meta">
-          <span className="tv-monogram">{monogram}</span>
+    <div className={`tv-card-wrap${selected ? ' tv-card-wrap--selected' : ''}`}>
+      <a className="tv-card" href={onToggle ? undefined : card.href}>
+        {card.image === null ? (
+          <div className="tv-card-tile tv-card-tile--meta">
+            <span className="tv-monogram">{monogram}</span>
+          </div>
+        ) : (
+          <div className="tv-card-tile tv-graded">
+            <img
+              src={card.image.src}
+              width={card.image.width}
+              height={card.image.height}
+              alt={card.image.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        )}
+        <div className="tv-card-body">
+          <p className="tv-card-family">
+            {card.familyName}
+            {card.featured ? ' · featured' : ''}
+          </p>
+          <h3 className="tv-card-title">{card.title}</h3>
+          <p className="tv-card-desc">{card.description}</p>
+          <div className="tv-card-vocab">
+            {card.vocabulary.slice(0, 4).map((v) => (
+              <span className="tv-vocab" key={v}>
+                {v}
+              </span>
+            ))}
+          </div>
+          {card.image === null && <p className="tv-card-meta">metadata only · {card.license}</p>}
         </div>
-      ) : (
-        /* [G5] .tv-graded wrapper so grade + hero tokens apply. */
-        <div className="tv-card-tile tv-graded">
-          <img
-            src={card.image.src}
-            width={card.image.width}
-            height={card.image.height}
-            alt={card.image.alt}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
+      </a>
+      {onToggle && (
+        <button
+          type="button"
+          className={`tv-card-select${selected ? ' tv-card-select--active' : ''}`}
+          onClick={() => onToggle(card.id)}
+          aria-pressed={selected}
+        >
+          {selected ? '✓ selected' : '+ select'}
+        </button>
       )}
-      <div className="tv-card-body">
-        <p className="tv-card-family">
-          {card.familyName}
-          {card.featured ? ' · featured' : ''}
-        </p>
-        <h3 className="tv-card-title">{card.title}</h3>
-        <p className="tv-card-desc">{card.description}</p>
-        <div className="tv-card-vocab">
-          {card.vocabulary.slice(0, 4).map((v) => (
-            <span className="tv-vocab" key={v}>
-              {v}
-            </span>
-          ))}
-        </div>
-        {card.image === null && <p className="tv-card-meta">metadata only · {card.license}</p>}
-      </div>
-    </a>
+    </div>
   )
 }
 
 export default function LibraryBrowser({ cards, families }: Props) {
-  // No localStorage read during render — the input starts empty on server and client.
   const [query, setQuery] = useState('')
   const [family, setFamily] = useState<string>('all')
+  const [selectMode, setSelectMode] = useState(false)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+
+  // Pre-select from URL params (?refs=id1,id2)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const refs = params.get('refs')
+    if (refs) {
+      const ids = refs.split(',').filter(Boolean)
+      if (ids.length) {
+        setSelected(new Set(ids))
+        setSelectMode(true)
+      }
+    }
+  }, [])
 
   const counts = useMemo(() => {
     const m = new Map<string, number>()
@@ -95,37 +110,65 @@ export default function LibraryBrowser({ cards, families }: Props) {
   )
 
   const visible = useMemo(() => {
-    // Empty query bypasses Fuse entirely.
     const searched = query.trim() ? fuse.search(query.trim()).map((r) => r.item) : cards
     return family === 'all' ? searched : searched.filter((c) => c.familyId === family)
   }, [cards, fuse, query, family])
 
+  function toggleSelect(id: string) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else if (next.size < 5) {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  function sendToGenerate() {
+    const ids = Array.from(selected).join(',')
+    window.location.href = `/generate?refs=${ids}`
+  }
+
+  const selectedCards = cards.filter(c => selected.has(c.id))
+
   return (
     <div className="tv-browser">
-      <div className="tv-tabs">
+      <div className="tv-library-toolbar">
+        <div className="tv-tabs">
+          <button
+            type="button"
+            className="tv-tab"
+            aria-pressed={family === 'all'}
+            onClick={() => setFamily('all')}
+          >
+            all {cards.length}
+          </button>
+          {tabs.map((f) => {
+            const n = counts.get(f.id) ?? 0
+            return (
+              <button
+                key={f.id}
+                type="button"
+                className="tv-tab"
+                disabled={n === 0}
+                aria-pressed={family === f.id}
+                onClick={() => setFamily(f.id)}
+              >
+                {f.name} {n}
+              </button>
+            )
+          })}
+        </div>
         <button
           type="button"
-          className="tv-tab"
-          aria-pressed={family === 'all'}
-          onClick={() => setFamily('all')}
+          className={`tv-tab${selectMode ? '' : ' tv-tab--outline'}`}
+          aria-pressed={selectMode}
+          onClick={() => setSelectMode(s => !s)}
         >
-          all {cards.length}
+          {selectMode ? '✓ selecting' : ' select mode'}
         </button>
-        {tabs.map((f) => {
-          const n = counts.get(f.id) ?? 0
-          return (
-            <button
-              key={f.id}
-              type="button"
-              className="tv-tab"
-              disabled={n === 0}
-              aria-pressed={family === f.id}
-              onClick={() => setFamily(f.id)}
-            >
-              {f.name} {n}
-            </button>
-          )
-        })}
       </div>
 
       <input
@@ -139,6 +182,7 @@ export default function LibraryBrowser({ cards, families }: Props) {
 
       <p className="tv-count" aria-live="polite">
         {visible.length} of {cards.length} references
+        {selectMode && selected.size > 0 && ` · ${selected.size}/5 selected`}
       </p>
 
       {visible.length === 0 ? (
@@ -146,8 +190,33 @@ export default function LibraryBrowser({ cards, families }: Props) {
       ) : (
         <div className="tv-card-grid">
           {visible.map((c) => (
-            <CardTile key={c.id} card={c} />
+            <CardTile
+              key={c.id}
+              card={c}
+              selected={selected.has(c.id)}
+              onToggle={selectMode ? toggleSelect : undefined}
+            />
           ))}
+        </div>
+      )}
+
+      {selectMode && selected.size > 0 && (
+        <div className="tv-selection-bar">
+          <div className="tv-selection-chips">
+            {selectedCards.map(c => (
+              <span key={c.id} className="tv-sel-chip">
+                {c.title}
+                <button type="button" onClick={() => toggleSelect(c.id)}>✕</button>
+              </span>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="tv-btn"
+            onClick={sendToGenerate}
+          >
+            SEND TO GENERATE ({selected.size})
+          </button>
         </div>
       )}
     </div>
