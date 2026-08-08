@@ -3,7 +3,16 @@ import { EDITABLE } from '../../tokens/defaults'
 import { copyText } from '../../lib/clipboard'
 
 type Family = { id: string; name: string; description: string; vocabulary: string[]; guardrails: { always: string[]; never: string[] } }
-type Inspiration = { id: string; title: string; familyId: string; familyName: string; description: string; vocabulary: string[] }
+type Inspiration = {
+  id: string
+  title: string
+  familyId: string
+  familyName: string
+  description: string
+  vocabulary: string[]
+  intent: string
+  imageRecipe: { subject: string; medium: string; palette: string[]; aspect: string }
+}
 
 type Props = {
   families: Family[]
@@ -94,24 +103,52 @@ It must appear in the hero and repeat at the end of the page.`)
       if (!d) continue
 
       const fam = families.find(f => f.id === d.familyId)
-      const insp = inspirations.find(i => i.id === d.inspirationId)
+      const insp = inspirations.find(x => x.id === d.inspirationId)
 
       const aesthetic = d.customAesthetic || (fam ? `${fam.name} — ${fam.vocabulary.join(', ')}` : `[AESTHETIC ${i}]`)
-      const reference = d.customReference || (insp ? `${insp.title} — match feel, not content.` : `[REFERENCE ${i}]`)
 
       sections.push(`\n--- DIRECTION ${i} (v${i}) ---`)
       sections.push(`Aesthetic: ${aesthetic}`)
-      sections.push(`Reference: ${reference}`)
+
+      // Family context (full detail when available)
+      if (fam) {
+        sections.push(`Family: ${fam.name}`)
+        sections.push(`Family description: ${fam.description}`)
+        sections.push(`Family vocabulary: ${fam.vocabulary.join(', ')}`)
+        if (fam.guardrails.always.length) sections.push(`Family always: ${fam.guardrails.always.join('; ')}`)
+        if (fam.guardrails.never.length) sections.push(`Family never: ${fam.guardrails.never.join('; ')}`)
+      }
+
+      // Reference inspiration (full detail when selected from library)
+      if (insp) {
+        sections.push(`Reference: ${insp.title} — match feel, not content.`)
+        sections.push(`Reference description: ${insp.description}`)
+        sections.push(`Reference vocabulary: ${insp.vocabulary.join(', ')}`)
+        if (insp.intent) {
+          sections.push(`Reference intent: ${insp.intent.trim()}`)
+        }
+        if (insp.imageRecipe) {
+          sections.push(`Hero image suggestion: ${insp.imageRecipe.subject}`)
+          sections.push(`Hero medium: ${insp.imageRecipe.medium}`)
+          if (insp.imageRecipe.palette.length) {
+            sections.push(`Hero palette: ${insp.imageRecipe.palette.join(', ')}`)
+          }
+          sections.push(`Hero aspect: ${insp.imageRecipe.aspect}`)
+        }
+        if (insp.familyName && insp.familyName !== fam?.name) {
+          sections.push(`Reference family: ${insp.familyName}`)
+        }
+      } else if (d.customReference) {
+        sections.push(`Reference: ${d.customReference}`)
+      } else {
+        sections.push(`Reference: [REFERENCE ${i}]`)
+      }
+
       if (d.futureHero) {
         sections.push(`Future hero: ${d.futureHero}`)
       }
       if (d.placement) {
         sections.push(`Placement: ${d.placement}`)
-      }
-      if (fam) {
-        sections.push(`Family vocabulary: ${fam.vocabulary.join(', ')}`)
-        if (fam.guardrails.always.length) sections.push(`Family always: ${fam.guardrails.always.join('; ')}`)
-        if (fam.guardrails.never.length) sections.push(`Family never: ${fam.guardrails.never.join('; ')}`)
       }
     }
 

@@ -21,6 +21,13 @@ const inspirationData = entries.map(e => ({
   familyName: families.find(f => f.id === (e.data.family as string))?.data.name ?? '',
   description: e.data.description,
   vocabulary: e.data.vocabulary,
+  intent: e.data.intent,
+  imageRecipe: {
+    subject: e.data.imageRecipe.subject,
+    medium: e.data.imageRecipe.medium,
+    palette: e.data.imageRecipe.palette,
+    aspect: e.data.imageRecipe.aspect,
+  },
 }))
 ---
 
