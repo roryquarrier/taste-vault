@@ -9,7 +9,7 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
 <Base title={title} description={description}>
   <div class="reference-page">
     <!-- Hero section -->
-    <section class="hero tv-graded">
+    <section class="hero">
       <div class="hero-content">
         <p class="mono-label">PLATE I-A · REFERENCE</p>
         <h1 class="hero-heading text-h1">Restore your books.</h1>
@@ -19,11 +19,10 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
           <a class="cta-secondary" href="/library">BROWSE STYLES →</a>
         </div>
       </div>
-      <div class="hero-image-slot">
-        <!-- Hero image placeholder — .tv-graded applies filter, grain, position -->
+      <div class="hero-image-slot tv-graded">
         <div class="hero-placeholder">
           <span class="placeholder-text">HERO IMAGE</span>
-          <span class="placeholder-sub">var(--tv-hero-filter) applies here</span>
+          <span class="placeholder-sub">hero filter + grain apply here</span>
         </div>
       </div>
     </section>
@@ -84,10 +83,11 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
 
   .hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 60vh;
-    padding: calc(var(--tv-space-unit) * 8);
-    gap: calc(var(--tv-space-unit) * 4);
+    grid-template-columns: 1.2fr 1fr;
+    min-height: auto;
+    padding: calc(var(--tv-space-unit) * 6) 0;
+    gap: calc(var(--tv-space-unit) * 6);
+    align-items: center;
   }
 
   .hero-content {
@@ -112,8 +112,9 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
 
   .cta-row {
     display: flex;
-    gap: calc(var(--tv-space-unit) * 2);
+    gap: calc(var(--tv-space-unit) * 4);
     align-items: center;
+    margin-top: calc(var(--tv-space-unit) * 2);
   }
 
   .cta-primary {
@@ -148,6 +149,8 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     border-radius: var(--tv-radius);
     background: var(--tv-surface);
     overflow: hidden;
+    aspect-ratio: 4 / 3;
+    max-height: 400px;
   }
 
   .hero-placeholder {
