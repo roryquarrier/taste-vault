@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import TweaksPanel from '../components/react/TweaksPanel.tsx'
+import VariationViewer from '../components/react/VariationViewer.tsx'
 
 const title = 'Book Restorer — Reference Page'
 const description = 'Hand-built reference page for the tweaks panel. Every visual value comes from a token.'
@@ -108,6 +109,11 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
       </div>
     </footer>
   </div>
+
+  <!-- Variation Viewer: connect a folder of generated HTML files -->
+  <section class="variation-section">
+    <VariationViewer client:visible />
+  </section>
 
   <!-- The tweaks panel — client:idle so it doesn't block LCP -->
   <TweaksPanel client:idle />
