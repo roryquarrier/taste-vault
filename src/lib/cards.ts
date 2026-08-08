@@ -32,12 +32,23 @@ export async function toCardData(
   let image: CardData['image'] = null
   // [G7] publishAsset === false ⇒ no <Image>, nothing enters the pipeline.
   if (e.data.publishAsset && e.data.thumb) {
-    const img = await getImage({ src: e.data.thumb, width: 800, format: 'webp' })
-    image = {
-      src: img.src,
-      width: Number(img.attributes.width),
-      height: Number(img.attributes.height),
-      alt: e.data.alt,
+    const thumb = e.data.thumb
+    // If thumb is a public/ URL path (starts with /), use directly
+    if (typeof thumb === 'string' && thumb.startsWith('/')) {
+      image = { src: thumb, width: 800, height: 533, alt: e.data.alt }
+    } else {
+      // Otherwise treat as an image asset
+      try {
+        const img = await getImage({ src: thumb as any, width: 800, format: 'webp' })
+        image = {
+          src: img.src,
+          width: Number(img.attributes.width),
+          height: Number(img.attributes.height),
+          alt: e.data.alt,
+        }
+      } catch {
+        image = { src: String(thumb), width: 800, height: 533, alt: e.data.alt }
+      }
     }
   }
   return {

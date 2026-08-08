@@ -37,9 +37,9 @@ const inspirations = defineCollection({
         description: z.string(),
         vocabulary: z.array(z.string()).min(3).max(12),
 
-        // [G7] thumb is OPTIONAL. Required only when publishAsset is true (see refine).
-        thumb: image().optional(),
-        full: image().optional(),
+        // thumb can be a public/ URL path (/inspirations/...) or an image() asset
+        thumb: z.string().optional(),
+        full: z.string().optional(),
         alt: z.string(),
 
         source: z

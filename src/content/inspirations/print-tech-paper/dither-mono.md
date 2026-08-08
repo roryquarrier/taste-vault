@@ -5,7 +5,8 @@ family: print-tech-paper
 description: Stark black-and-white with bitmap dither texture. Serif display carrying full authority.
 vocabulary: [halftone dither, stark b&w, film grain, serif display, split-screen form + art]
 alt: Dither Mono — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/print-tech-paper/print-tech-paper.png
 source:
   platform: web
   license: fair-use-reference

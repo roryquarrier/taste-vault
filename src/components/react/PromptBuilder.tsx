@@ -14,6 +14,8 @@ type Inspiration = {
   imageRecipe: { subject: string; medium: string; palette: string[]; aspect: string }
 }
 
+type ComponentPrompt = { label: string; prompt: string }
+
 type Props = {
   families: Family[]
   inspirations: Inspiration[]
@@ -71,6 +73,9 @@ export default function PromptBuilder({ families, inspirations }: Props) {
   const [guardNever, setGuardNever] = useState('purple gradients, 3D SaaS blobs, untextured stock photography, Inter-only typography')
   const [numVersions, setNumVersions] = useState(5)
 
+  // Component prompts pasted from 21st.dev (label + prompt)
+  const [componentPrompts, setComponentPrompts] = useState<ComponentPrompt[]>([])
+
   const [copied, setCopied] = useState(false)
 
   // Token contract list
@@ -96,6 +101,16 @@ It must appear in the hero and repeat at the end of the page.`)
     sections.push(`\nCreate ${numVersions} version${numVersions > 1 ? 's' : ''} of this page, each in its own folder (v1/ ... v${numVersions}/), one per direction below. Do NOT blend directions — each version commits fully to its own aesthetic.`)
 
     sections.push(`\nIMPORTANT — hero images come later. Do NOT generate or source any imagery. Each version, reserve the hero slot with a flat CSS stunt that matches the direction's palette.`)
+
+    // Component prompts pasted from 21st.dev
+    const filledComponents = componentPrompts.filter(c => c.label.trim() && c.prompt.trim())
+    if (filledComponents.length) {
+      const block = ['\n--- COMPONENT PROMPTS ---']
+      filledComponents.forEach(c => {
+        block.push(`[${c.label.trim()}]: ${c.prompt.trim()}`)
+      })
+      sections.push(block.join('\n'))
+    }
 
     // Per-direction blocks
     for (let i = 1; i <= numVersions; i++) {
@@ -160,7 +175,7 @@ It must appear in the hero and repeat at the end of the page.`)
     return sections.join('\n')
   }
 
-  const prompt = useMemo(() => buildPrompt(), [productName, productType, conversionGoal, messaging, guardAlways, guardNever, numVersions, directions, tokenContract])
+  const prompt = useMemo(() => buildPrompt(), [productName, productType, conversionGoal, messaging, guardAlways, guardNever, numVersions, directions, tokenContract, componentPrompts])
 
   function updateDirection(num: number, field: string, value: string) {
     setDirections(prev => {
@@ -186,6 +201,18 @@ It must appear in the hero and repeat at the end of the page.`)
       }
       return next
     })
+  }
+
+  // Component prompt helpers (21st.dev pastes)
+  const MAX_COMPONENT_PROMPTS = 5
+  function addComponentPrompt() {
+    setComponentPrompts(prev => (prev.length < MAX_COMPONENT_PROMPTS ? [...prev, { label: '', prompt: '' }] : prev))
+  }
+  function updateComponentPrompt(index: number, field: keyof ComponentPrompt, value: string) {
+    setComponentPrompts(prev => prev.map((c, i) => (i === index ? { ...c, [field]: value } : c)))
+  }
+  function removeComponentPrompt(index: number) {
+    setComponentPrompts(prev => prev.filter((_, i) => i !== index))
   }
 
   async function copyPrompt() {
@@ -247,9 +274,35 @@ It must appear in the hero and repeat at the end of the page.`)
         </div>
       </section>
 
+      {/* Component Prompts (21st.dev) */}
+      <section className="tv-pb-section">
+        <h2 className="tv-pb-section-title">3 · Component Prompts</h2>
+        <p className="tv-pb-hint">Paste prompts copied from 21st.dev (buttons, cards, pricing sections, etc.). Label each one — they get injected into the master prompt as a COMPONENT PROMPTS block.</p>
+        {componentPrompts.map((c, i) => (
+          <div key={i} className="tv-pb-direction" style={{ gap: 'calc(var(--tv-space-unit) * 2)' }}>
+            <div className="tv-pb-field" style={{ flex: '0 0 auto', minWidth: '200px' }}>
+              <span>Label</span>
+              <input type="text" value={c.label} onChange={e => updateComponentPrompt(i, 'label', e.target.value)}
+                placeholder="e.g. pricing section, hero button, footer" className="tv-pb-input" />
+            </div>
+            <div className="tv-pb-field" style={{ flex: '1 1 auto' }}>
+              <span>Prompt (from 21st.dev)</span>
+              <textarea value={c.prompt} onChange={e => updateComponentPrompt(i, 'prompt', e.target.value)}
+                placeholder="Paste the prompt copied from 21st.dev here…" rows={3} className="tv-pb-input tv-pb-textarea" />
+            </div>
+            <button type="button" className="tv-btn" onClick={() => removeComponentPrompt(i)}
+              style={{ alignSelf: 'flex-start', marginTop: 'calc(var(--tv-space-unit) * 4)' }}>REMOVE</button>
+          </div>
+        ))}
+        {componentPrompts.length < MAX_COMPONENT_PROMPTS && (
+          <button type="button" className="tv-btn" onClick={addComponentPrompt}
+            style={{ marginTop: 'calc(var(--tv-space-unit) * 2)' }}>+ ADD COMPONENT PROMPT</button>
+        )}
+      </section>
+
       {/* Per-direction blocks */}
       <section className="tv-pb-section">
-        <h2 className="tv-pb-section-title">3 · Aesthetic Directions</h2>
+        <h2 className="tv-pb-section-title">4 · Aesthetic Directions</h2>
         <p className="tv-pb-hint">Pick a family from the library for each direction, or type a custom aesthetic. Each version commits fully to its own aesthetic.</p>
         {Array.from({ length: numVersions }, (_, i) => i + 1).map(num => {
           const d = directions[num]
@@ -303,7 +356,7 @@ It must appear in the hero and repeat at the end of the page.`)
       {/* Output */}
       <section className="tv-pb-section">
         <div className="tv-pb-output-header">
-          <h2 className="tv-pb-section-title">4 · Generated Prompt</h2>
+          <h2 className="tv-pb-section-title">5 · Generated Prompt</h2>
           <button type="button" className="tv-btn" onClick={copyPrompt}>
             {copied ? 'COPIED ✓' : 'COPY PROMPT'}
           </button>

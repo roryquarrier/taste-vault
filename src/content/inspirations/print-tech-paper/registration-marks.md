@@ -5,7 +5,8 @@ family: print-tech-paper
 description: CMYK registration marks, crop marks, and technical marginalia as decorative elements.
 vocabulary: [registration marks, CMYK targets, crop marks, technical marginalia, uncoated stock]
 alt: Registration Marks — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/print-tech-paper/print-tech-paper.png
 source:
   platform: web
   license: fair-use-reference

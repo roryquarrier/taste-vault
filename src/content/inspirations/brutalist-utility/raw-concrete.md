@@ -5,7 +5,8 @@ family: brutalist-utility
 description: Brutalist web design with raw concrete textures, monospace type, and exposed grid systems.
 vocabulary: [raw concrete, monospace only, exposed grid, no decoration, structural honesty]
 alt: Raw Concrete — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/brutalist-utility/brutalist-utility.png
 source:
   platform: web
   license: fair-use-reference

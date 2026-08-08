@@ -19,10 +19,20 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
           <a class="cta-secondary" href="/library">BROWSE STYLES →</a>
         </div>
       </div>
+      <!--
+        .tv-graded is the grade-token target.
+        [FIX] The hero placeholder now carries a rich gradient that the grade
+        filter (saturation/contrast/brightness/warmth) can actually act on, plus
+        an inner .hero-pos-target that the image tokens (pos-x/pos-y/scale)
+        transform visibly even though there is no <img>. Grain overlays via
+        .tv-graded::after (opacity = --tv-grade-grain).
+      -->
       <div class="hero-image-slot tv-graded">
-        <div class="hero-placeholder">
-          <span class="placeholder-text">HERO IMAGE</span>
-          <span class="placeholder-sub">hero filter + grain apply here</span>
+        <div class="hero-pos-target">
+          <div class="hero-placeholder">
+            <span class="placeholder-text">HERO IMAGE</span>
+            <span class="placeholder-sub">hero filter + grain + pos/scale apply here</span>
+          </div>
         </div>
       </div>
     </section>
@@ -31,8 +41,8 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     <section class="body-section">
       <div class="body-content">
         <p class="mono-label">§1 · HOW IT WORKS</p>
-        <h2 class="text-h1" style="font-size: var(--tv-h1-size);">Three steps. Ten minutes.</h2>
-        
+        <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Three steps. Ten minutes.</h2>
+
         <div class="services-grid" style="gap: var(--tv-grid-gutter);">
           <div class="service-card">
             <p class="mono-label">01</p>
@@ -55,6 +65,38 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
           <p class="mono-label">§2 · DETAIL</p>
           <p>Every restored book goes through a multi-stage pipeline: page extraction, AI-driven restoration, OCR for selectable text, and PDF reassembly. The result is a clean, professional digital copy that looks better than the original.</p>
           <p>Drag any slider in the panel to see how token changes affect this page in real time. Every visual value — font, size, colour, spacing, radius — comes from a CSS custom property defined in tokens.json.</p>
+        </div>
+
+        <!--
+          [FIX] Token-stress block. Every group gets at least one element that
+          only responds to its tokens, so dragging a slider in any group produces
+          an unambiguous visible change on this page.
+        -->
+        <div class="stress-block">
+          <p class="mono-label">§3 · TOKEN STRESS TEST</p>
+          <div class="stress-grid" style="gap: var(--tv-grid-gutter);">
+            <!-- COLOR: accent + accent-2 swatches that recompute live -->
+            <div class="stress-card stress-color">
+              <p class="mono-label">COLOR</p>
+              <div class="swatch-row">
+                <span class="swatch swatch-accent">accent</span>
+                <span class="swatch swatch-accent2">accent-2</span>
+                <span class="swatch swatch-fg">fg</span>
+                <span class="swatch swatch-muted">muted</span>
+                <span class="swatch swatch-border">border</span>
+              </div>
+            </div>
+            <!-- FORM: radius, border-width, space-unit -->
+            <div class="stress-card stress-form">
+              <p class="mono-label">FORM</p>
+              <div class="form-demo">radius · border · space</div>
+            </div>
+            <!-- GRADE mirror: a second .tv-graded target so the filter is visible here too -->
+            <div class="stress-card stress-grade tv-graded">
+              <p class="mono-label">GRADE</p>
+              <span class="grade-label">saturation · contrast · brightness · warmth · grain</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -120,7 +162,7 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
   .cta-primary {
     background: var(--tv-accent);
     color: var(--tv-bg);
-    border: none;
+    border: var(--tv-border-width) solid var(--tv-accent);
     border-radius: var(--tv-radius);
     padding: calc(var(--tv-space-unit) * 3) calc(var(--tv-space-unit) * 5);
     font-family: var(--tv-font-mono);
@@ -141,16 +183,43 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     padding-bottom: calc(var(--tv-space-unit) * 1);
   }
 
+  /* [FIX] Hero image slot now carries a rich accent gradient so the grade
+     filter (saturate/contrast/brightness/hue-rotate) has real colour to act on
+     instead of a flat surface grey. Background is built from accent + accent-2
+     so it ALSO reacts to the Color tokens. */
   .hero-image-slot {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     border: var(--tv-border-width) dashed var(--tv-border);
     border-radius: var(--tv-radius);
-    background: var(--tv-surface);
+    /* two-stop gradient using live color tokens → reacts to accent/accent-2 drag */
+    background:
+      radial-gradient(120% 120% at 30% 20%, var(--tv-accent) 0%, transparent 55%),
+      radial-gradient(120% 120% at 80% 80%, var(--tv-accent-2) 0%, transparent 60%),
+      var(--tv-surface);
     overflow: hidden;
     aspect-ratio: 4 / 3;
     max-height: 400px;
+  }
+
+  /* [FIX] IMAGE TOKENS WERE NO-OPS HERE (no <img> existed). Now this inner
+     target consumes the image tokens directly:
+       - hero-pos-x / hero-pos-y → translate the content around the slot
+       - hero-scale               → scale the content up/down
+     This is what tokens.css does for a real <img> (object-position + scale);
+     here we mirror it with transform so the placeholder also moves. */
+  .hero-pos-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transform:
+      translate(calc((var(--tv-hero-pos-x) - 50%) * 1), calc((var(--tv-hero-pos-y) - 50%) * 1))
+      scale(var(--tv-hero-scale));
+    transition: transform 0.05s linear;
   }
 
   .hero-placeholder {
@@ -158,7 +227,11 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     flex-direction: column;
     gap: calc(var(--tv-space-unit) * 1);
     text-align: center;
-    color: var(--tv-fg-muted);
+    color: var(--tv-fg);
+    background: color-mix(in srgb, var(--tv-bg) 80%, transparent);
+    border: var(--tv-border-width) solid var(--tv-bg);
+    border-radius: var(--tv-radius);
+    padding: calc(var(--tv-space-unit) * 3) calc(var(--tv-space-unit) * 5);
   }
   .placeholder-text {
     font-family: var(--tv-font-mono);
@@ -168,7 +241,7 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
   .placeholder-sub {
     font-family: var(--tv-font-mono);
     font-size: 0.75rem;
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   .mono-label {
@@ -186,6 +259,13 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
   .body-content {
     max-width: 1200px;
     margin: 0 auto;
+  }
+
+  .section-heading {
+    font-family: var(--tv-font-heading);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: var(--tv-h1-leading);
   }
 
   .services-grid {
@@ -215,6 +295,75 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     margin-bottom: calc(var(--tv-space-unit) * 4);
   }
 
+  /* --- TOKEN STRESS TEST --- */
+  .stress-block {
+    margin: calc(var(--tv-space-unit) * 8) 0;
+  }
+  .stress-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: calc(var(--tv-space-unit) * 4);
+  }
+  .stress-card {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    padding: calc(var(--tv-space-unit) * 4);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 3);
+    min-height: 8rem;
+  }
+  /* COLOR: live swatches, one per color token */
+  .swatch-row { display: flex; flex-wrap: wrap; gap: calc(var(--tv-space-unit) * 1); }
+  .swatch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 2.5rem;
+    font-family: var(--tv-font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: calc(var(--tv-radius) * 0.7);
+    border: var(--tv-border-width) solid var(--tv-border);
+  }
+  .swatch-accent  { background: var(--tv-accent);   color: var(--tv-bg); }
+  .swatch-accent2 { background: var(--tv-accent-2); color: var(--tv-fg); }
+  .swatch-fg      { background: var(--tv-fg);       color: var(--tv-bg); }
+  .swatch-muted   { background: var(--tv-fg-muted); color: var(--tv-bg); }
+  .swatch-border  { background: var(--tv-border);   color: var(--tv-fg); }
+
+  /* FORM: radius, border-width, space-unit all hit this one element */
+  .form-demo {
+    border: var(--tv-border-width) solid var(--tv-accent);
+    border-radius: var(--tv-radius);
+    padding: calc(var(--tv-space-unit) * 3) calc(var(--tv-space-unit) * 4);
+    background: var(--tv-bg);
+    color: var(--tv-fg);
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    align-self: flex-start;
+  }
+
+  /* GRADE mirror: another .tv-graded target with a colourful fill so the grade
+     filter + grain show up in the body too, not just the hero. */
+  .stress-grade {
+    background:
+      linear-gradient(135deg, var(--tv-accent) 0%, var(--tv-accent-2) 100%);
+    color: var(--tv-fg);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .grade-label {
+    font-family: var(--tv-font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    max-width: 90%;
+  }
+
   .reference-footer {
     border-top: var(--tv-border-width) solid var(--tv-border);
     padding: calc(var(--tv-space-unit) * 4) calc(var(--tv-space-unit) * 8);
@@ -225,7 +374,8 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
       grid-template-columns: 1fr;
       padding: calc(var(--tv-space-unit) * 4);
     }
-    .services-grid {
+    .services-grid,
+    .stress-grid {
       grid-template-columns: 1fr;
     }
   }

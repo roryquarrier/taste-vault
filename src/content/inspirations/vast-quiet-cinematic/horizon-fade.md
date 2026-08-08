@@ -5,7 +5,8 @@ family: vast-quiet-cinematic
 description: Vast desaturated aerial landscape with extreme whitespace and tiny centered type.
 vocabulary: [extreme whitespace, desaturated, aerial perspective, tiny centered sans, mist atmosphere]
 alt: Horizon Fade — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/vast-quiet-cinematic/vast-quiet-cinematic.png
 source:
   platform: web
   license: fair-use-reference

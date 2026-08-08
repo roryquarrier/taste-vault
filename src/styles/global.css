@@ -298,7 +298,15 @@
 }
 
 /* --- slider (Radix) --- */
+/* [FIX] The Root MUST be position:relative. Radix's Slider.Thumb renders an
+   OUTER span with `position:absolute; left: calc(N% + offset)` (the positioning
+   wrapper) wrapping the INNER .tv-slider-thumb span. Without a positioned
+   ancestor the wrapper anchors to .tv-panel (position:fixed) and the thumbs fly
+   off their tracks. The thumb is vertically centered via the flexbox
+   static-position rule (absolutely-positioned flex children honor
+   align-items:center) and horizontally via left + translateX(-50%). */
 .tv-slider {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -731,3 +739,215 @@
   line-height: 1;
 }
 .tv-sel-chip button:hover { color: var(--tv-accent); }
+
+/* ---------------------------------------------------------------------------
+   VARIATION VIEWER
+   A folder-connected HTML previewer with main tabs + iteration sub-tabs.
+   --------------------------------------------------------------------------- */
+
+.tv-vv {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 4);
+}
+
+.tv-vv-topbar {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 3);
+}
+
+.tv-vv-connect {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--tv-space-unit) * 2);
+}
+
+.tv-vv-connect-btn {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: calc(var(--tv-space-unit) * 2.5) calc(var(--tv-space-unit) * 4);
+  border: var(--tv-border-width) solid var(--tv-accent);
+  border-radius: var(--tv-radius);
+  background: var(--tv-accent);
+  color: var(--tv-bg);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.tv-vv-connect-btn:hover { opacity: 0.85; }
+
+.tv-vv-connect-btn--ghost {
+  background: transparent;
+  color: var(--tv-fg-muted);
+  border-color: var(--tv-border);
+  font-weight: 400;
+}
+.tv-vv-connect-btn--ghost:hover {
+  border-color: var(--tv-accent);
+  color: var(--tv-accent);
+  opacity: 1;
+}
+
+.tv-vv-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--tv-space-unit) * 3);
+  font-family: var(--tv-font-mono);
+  font-size: 0.75rem;
+  color: var(--tv-fg-muted);
+  word-break: break-all;
+}
+
+.tv-vv-breadcrumb--empty { opacity: 0.6; }
+
+.tv-vv-status {
+  color: var(--tv-accent);
+}
+
+/* --- empty state --- */
+.tv-vv-empty {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tv-space-unit) * 2);
+  padding: calc(var(--tv-space-unit) * 10);
+  border: var(--tv-border-width) dashed var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: var(--tv-surface);
+  text-align: center;
+  align-items: center;
+}
+.tv-vv-empty-title {
+  font-family: var(--tv-font-heading);
+  font-size: 1.25rem;
+  margin: 0;
+  color: var(--tv-fg);
+}
+.tv-vv-empty-sub {
+  font-size: 0.875rem;
+  line-height: var(--tv-body-leading);
+  color: var(--tv-fg-muted);
+  margin: 0;
+  max-width: var(--tv-measure);
+}
+
+/* --- main tabs --- */
+.tv-vv-maintabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tv-space-unit) * 2);
+}
+
+.tv-vv-maintab {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tv-space-unit) * 2);
+  padding: calc(var(--tv-space-unit) * 1.5) calc(var(--tv-space-unit) * 1.5);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: var(--tv-surface);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.tv-vv-maintab:hover { border-color: var(--tv-accent); }
+.tv-vv-maintab--active {
+  border-color: var(--tv-accent);
+  background: var(--tv-bg);
+}
+
+.tv-vv-maintab-label {
+  /* editable label looks like tab text, not a box */
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-fg);
+  padding: calc(var(--tv-space-unit) * 1) calc(var(--tv-space-unit) * 2);
+  min-width: 4ch;
+  border-radius: var(--tv-radius);
+}
+.tv-vv-maintab-label:focus {
+  background: var(--tv-bg);
+  box-shadow: 0 0 0 2px var(--tv-accent);
+}
+
+.tv-vv-maintab-count {
+  font-family: var(--tv-font-mono);
+  font-size: 0.625rem;
+  color: var(--tv-fg-muted);
+  padding: 0 calc(var(--tv-space-unit) * 1);
+}
+
+/* --- sub tabs --- */
+.tv-vv-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tv-space-unit) * 1.5);
+  padding-left: calc(var(--tv-space-unit) * 2);
+}
+
+.tv-vv-subtab {
+  font-family: var(--tv-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: calc(var(--tv-space-unit) * 1.5) calc(var(--tv-space-unit) * 3);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: transparent;
+  color: var(--tv-fg-muted);
+  cursor: pointer;
+}
+.tv-vv-subtab:hover { color: var(--tv-fg); border-color: var(--tv-fg-muted); }
+.tv-vv-subtab--active {
+  color: var(--tv-bg);
+  background: var(--tv-accent);
+  border-color: var(--tv-accent);
+}
+
+/* --- stage / iframe --- */
+.tv-vv-stage {
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  overflow: hidden;
+  background: var(--tv-surface);
+}
+
+.tv-vv-iframe {
+  display: block;
+  width: 100%;
+  height: 75vh;
+  min-height: 480px;
+  border: none;
+  background: #fff;
+}
+
+/* --- limitation note --- */
+.tv-vv-note {
+  font-family: var(--tv-font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--tv-fg-muted);
+  margin: 0;
+  padding: calc(var(--tv-space-unit) * 3) calc(var(--tv-space-unit) * 4);
+  border: var(--tv-border-width) dashed var(--tv-border);
+  border-radius: var(--tv-radius);
+}
+.tv-vv-note strong { color: var(--tv-fg); }
+.tv-vv-note code {
+  font-family: var(--tv-font-mono);
+  font-size: 0.625rem;
+  color: var(--tv-accent);
+}
+.tv-vv-note em { font-style: normal; color: var(--tv-fg); }
+
+@media (max-width: 768px) {
+  .tv-vv-iframe { height: 55vh; }
+}

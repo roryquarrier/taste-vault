@@ -5,7 +5,8 @@ family: organic-craft
 description: Organic craft aesthetic with visible linen texture, natural dyes, and hand-made feel.
 vocabulary: [linen texture, natural dyes, hand-made feel, organic imperfection, warm neutrals]
 alt: Linen Weave — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/organic-craft/organic-craft.png
 source:
   platform: web
   license: fair-use-reference

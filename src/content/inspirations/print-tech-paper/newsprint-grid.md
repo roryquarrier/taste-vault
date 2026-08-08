@@ -5,7 +5,8 @@ family: print-tech-paper
 description: Dense tabular layout with monospace data callouts and hairline rules.
 vocabulary: [monospace data, hairline rules, tabular density, editorial hierarchy]
 alt: Newsprint Grid — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/print-tech-paper/print-tech-paper.png
 source:
   platform: web
   license: fair-use-reference

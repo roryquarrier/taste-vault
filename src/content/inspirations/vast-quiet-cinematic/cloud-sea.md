@@ -5,7 +5,8 @@ family: vast-quiet-cinematic
 description: A sea of clouds viewed from above, with a single accent of color in the sky.
 vocabulary: [minimal, atmospheric, monochrome ground, single warm accent]
 alt: Cloud Sea — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/vast-quiet-cinematic/vast-quiet-cinematic.png
 source:
   platform: web
   license: fair-use-reference

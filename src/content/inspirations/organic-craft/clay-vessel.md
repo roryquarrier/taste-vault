@@ -5,7 +5,8 @@ family: organic-craft
 description: Hand-thrown ceramic vessel photographed against a neutral background with warm directional light.
 vocabulary: [hand-thrown, ceramic glaze, organic form, warm directional light, neutral ground]
 alt: Clay Vessel — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/organic-craft/organic-craft.png
 source:
   platform: web
   license: fair-use-reference

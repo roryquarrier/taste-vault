@@ -69,7 +69,7 @@ const heroImage = entry.data.publishAsset ? (entry.data.full ?? entry.data.thumb
     {
       heroImage ? (
         <div class="tv-graded tv-hero">
-          <Image src={heroImage} alt={entry.data.alt} width={1400} format="webp" />
+          <img src={heroImage as string} alt={entry.data.alt} width="1400" height="933" />
         </div>
       ) : (
         <p class="tv-card-meta">

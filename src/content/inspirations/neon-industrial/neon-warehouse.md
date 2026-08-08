@@ -5,7 +5,8 @@ family: neon-industrial
 description: Industrial warehouse aesthetic with neon accent lighting and raw metal surfaces.
 vocabulary: [raw metal, neon accent, industrial geometry, dark ground, high contrast]
 alt: Neon Warehouse — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/neon-industrial/neon-industrial.png
 source:
   platform: web
   license: fair-use-reference

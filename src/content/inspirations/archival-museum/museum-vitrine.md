@@ -5,7 +5,8 @@ family: archival-museum
 description: Museum exhibition aesthetic with vitrine-like presentation and archival documentation feel.
 vocabulary: [vitrine presentation, archival documentation, museum labels, centered focus, scholarly serif]
 alt: Museum Vitrine — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/archival-museum/archival-museum.png
 source:
   platform: web
   license: fair-use-reference

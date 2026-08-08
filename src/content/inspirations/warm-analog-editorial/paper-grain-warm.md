@@ -5,7 +5,8 @@ family: warm-analog-editorial
 description: Warm paper tones with visible grain, serif typography, and gentle color palette.
 vocabulary: [warm paper ground, visible grain, gentle serif, analog warmth, editorial spacing]
 alt: Paper Grain Warm — design reference
-publishAsset: false
+publishAsset: true
+thumb: /inspirations/warm-analog-editorial/warm-analog-editorial.png
 source:
   platform: web
   license: fair-use-reference
