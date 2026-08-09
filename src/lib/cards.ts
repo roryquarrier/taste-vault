@@ -31,11 +31,12 @@ export async function toCardData(
 ): Promise<CardData> {
   let image: CardData['image'] = null
   // [G7] publishAsset === false ⇒ no <Image>, nothing enters the pipeline.
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '')
   if (e.data.publishAsset && e.data.thumb) {
     const thumb = e.data.thumb
-    // If thumb is a public/ URL path (starts with /), use directly
+    // If thumb is a public/ URL path (starts with /), use directly (prepend base for subpath deployments)
     if (typeof thumb === 'string' && thumb.startsWith('/')) {
-      image = { src: thumb, width: 800, height: 533, alt: e.data.alt }
+      image = { src: `${base}${thumb}`, width: 800, height: 533, alt: e.data.alt }
     } else {
       // Otherwise treat as an image asset
       try {
