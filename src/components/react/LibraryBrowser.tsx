@@ -180,7 +180,7 @@ export default function LibraryBrowser({ cards: initialCards, families }: Props)
 
   function sendToGenerate() {
     const ids = Array.from(selected).join(',')
-    window.location.href = `/generate?refs=${ids}`
+    window.location.href = `${import.meta.env.BASE_URL}generate?refs=${ids}`
   }
 
   const selectedCards = cards.filter(c => selected.has(c.id))
