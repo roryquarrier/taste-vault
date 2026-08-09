@@ -8,9 +8,9 @@ const description = 'Connect your generated frontends, preview them live, tune t
 ---
 
 <Base title={title} description={description}>
-  <!-- Orientation header: what this page is, in one glance -->
+  <!-- Orientation header: what this page is, in one glance. No eyebrow — the
+       title carries the page identity. -->
   <header class="page-intro">
-    <p class="mono-label">taste-vault · reference</p>
     <h1 class="page-intro-title text-h1">Design Reference</h1>
     <p class="page-intro-sub">
       Connect your generated frontends, preview them live, tune the design
@@ -18,47 +18,44 @@ const description = 'Connect your generated frontends, preview them live, tune t
     </p>
   </header>
 
-  <!-- 1 · Connect & Preview -->
+  <!-- Variation viewer: the live preview. No ordinal label — it's the page's
+       headline tool, not "step 1". -->
   <section class="variation-section">
-    <p class="mono-label section-label">1 · Connect &amp; Preview</p>
     <VariationViewer client:visible />
   </section>
 
   <div class="reference-page">
-    <!-- 2 · Token Preview: proves the tokens are live before the panel opens -->
-    <section class="body-section">
-      <div class="body-content">
-        <p class="mono-label section-label">2 · Token Preview</p>
-        <div class="stress-block">
-          <div class="stress-grid" style="gap: var(--tv-grid-gutter);">
-            <!-- COLOR: accent + accent-2 swatches that recompute live -->
-            <div class="stress-card stress-color">
-              <p class="mono-label">COLOR</p>
-              <div class="swatch-row">
-                <span class="swatch swatch-accent">accent</span>
-                <span class="swatch swatch-accent2">accent-2</span>
-                <span class="swatch swatch-fg">fg</span>
-                <span class="swatch swatch-muted">muted</span>
-                <span class="swatch swatch-border">border</span>
-              </div>
-            </div>
-            <!-- FORM: radius, border-width, space-unit -->
-            <div class="stress-card stress-form">
-              <p class="mono-label">FORM</p>
-              <div class="form-demo">radius · border · space</div>
-            </div>
-            <!-- GRADE mirror: a second .tv-graded target so the filter is visible here too -->
-            <div class="stress-card stress-grade tv-graded">
-              <p class="mono-label">GRADE</p>
-              <span class="grade-label">saturation · contrast · brightness · warmth · grain</span>
-            </div>
+    <!-- Token stress test: proves the tokens are live before the panel opens.
+         The grid is deliberately asymmetric — color is the dominant column,
+         form + grade sit together on a narrow rail. Breaks the 3-equal-column
+         template grid. -->
+    <section class="stress-section">
+      <div class="stress-layout">
+        <div class="stress-color stress-card">
+          <p class="mono-label">COLOR</p>
+          <div class="swatch-row">
+            <span class="swatch swatch-accent">accent</span>
+            <span class="swatch swatch-accent2">accent-2</span>
+            <span class="swatch swatch-fg">fg</span>
+            <span class="swatch swatch-muted">muted</span>
+            <span class="swatch swatch-border">border</span>
+          </div>
+        </div>
+        <div class="stress-rail">
+          <div class="stress-form stress-card">
+            <p class="mono-label">FORM</p>
+            <div class="form-demo">radius · border · space</div>
+          </div>
+          <!-- GRADE mirror: a second .tv-graded target so the filter is visible here too -->
+          <div class="stress-grade stress-card tv-graded">
+            <p class="mono-label">GRADE</p>
+            <span class="grade-label">saturation · contrast · brightness · warmth · grain</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Layout specimen: editorial content that exercises every token family -->
-    <p class="mono-label section-label demo-label">specimen — every token, applied</p>
     <section class="hero">
       <div class="hero-content">
         <h1 class="hero-heading text-h1">The vault renders itself.</h1>
@@ -82,52 +79,48 @@ const description = 'Connect your generated frontends, preview them live, tune t
       </div>
     </section>
 
-    <section class="body-section">
-      <div class="body-content">
-        <div class="editorial-grid">
-          <div class="editorial-main">
-            <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Why tokens, not templates.</h2>
-            <p>
-              A template gives you a finished look. A token system gives you the
-              decisions behind that look — separated from the markup, editable in
-              isolation, and portable to any project that reads CSS custom properties.
-            </p>
-            <p>
-              Drag the accent hue and every swatch, button, link, and grade filter on
-              this page follows. Change the body size and the running text rescales
-              without touching the heading. That is the point: the system is the
-              source of truth, not the page.
-            </p>
-            <blockquote class="pull-quote">
-              The token is the decision. The page is just where the decision lands.
-            </blockquote>
-            <p>
-              When the system looks right, export the CSS. The tokens travel into your
-              project as a single stylesheet — no build step, no runtime, no dependency.
-              Paste it into the generated frontend and it inherits every decision.
-            </p>
-          </div>
-          <aside class="editorial-aside">
-            <div class="aside-block">
-              <p class="mono-label">type</p>
-              <p class="aside-demo aside-type">Aa</p>
-              <p class="aside-meta">heading: var(--tv-font-heading) · body: var(--tv-font-body)</p>
-            </div>
-            <div class="aside-block">
-              <p class="mono-label">radius</p>
-              <div class="aside-radius-demo"></div>
-              <p class="aside-meta">var(--tv-radius) · var(--tv-border-width)</p>
-            </div>
-            <div class="aside-block">
-              <p class="mono-label">spacing</p>
-              <div class="aside-spacing-demo">
-                <span></span><span></span><span></span><span></span>
-              </div>
-              <p class="aside-meta">unit: var(--tv-space-unit)</p>
-            </div>
-          </aside>
-        </div>
+    <section class="editorial-grid">
+      <div class="editorial-main">
+        <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Why tokens, not templates.</h2>
+        <p>
+          A template gives you a finished look. A token system gives you the
+          decisions behind that look — separated from the markup, editable in
+          isolation, and portable to any project that reads CSS custom properties.
+        </p>
+        <p>
+          Drag the accent hue and every swatch, button, link, and grade filter on
+          this page follows. Change the body size and the running text rescales
+          without touching the heading. That is the point: the system is the
+          source of truth, not the page.
+        </p>
+        <blockquote class="pull-quote">
+          The token is the decision. The page is just where the decision lands.
+        </blockquote>
+        <p>
+          When the system looks right, export the CSS. The tokens travel into your
+          project as a single stylesheet — no build step, no runtime, no dependency.
+          Paste it into the generated frontend and it inherits every decision.
+        </p>
       </div>
+      <aside class="editorial-aside">
+        <div class="aside-block">
+          <p class="mono-label">type</p>
+          <p class="aside-demo aside-type">Aa</p>
+          <p class="aside-meta">heading: var(--tv-font-heading) · body: var(--tv-font-body)</p>
+        </div>
+        <div class="aside-block">
+          <p class="mono-label">radius</p>
+          <div class="aside-radius-demo"></div>
+          <p class="aside-meta">var(--tv-radius) · var(--tv-border-width)</p>
+        </div>
+        <div class="aside-block">
+          <p class="mono-label">spacing</p>
+          <div class="aside-spacing-demo">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <p class="aside-meta">unit: var(--tv-space-unit)</p>
+        </div>
+      </aside>
     </section>
 
     <!-- Footer -->
@@ -167,17 +160,11 @@ const description = 'Connect your generated frontends, preview them live, tune t
     margin: 0;
   }
 
-  /* numbered step labels for the three page sections */
-  .section-label {
-    margin-bottom: calc(var(--tv-space-unit) * 2);
-  }
-  .demo-label {
-    padding: 0 calc(var(--tv-space-unit) * 8);
-    margin-top: calc(var(--tv-space-unit) * 6);
-  }
-
+  /* variation viewer section — wider bottom padding so it breathes before
+     the asymmetric stress test, unlike the uniform AI template rhythm where
+     every section is padded identically. */
   .variation-section {
-    padding: 0 calc(var(--tv-space-unit) * 8) calc(var(--tv-space-unit) * 4);
+    padding: 0 calc(var(--tv-space-unit) * 8) calc(var(--tv-space-unit) * 8);
     background: var(--tv-bg);
   }
 
@@ -188,6 +175,39 @@ const description = 'Connect your generated frontends, preview them live, tune t
     font-family: var(--tv-font-body);
     font-size: var(--tv-body-size);
     line-height: var(--tv-body-leading);
+  }
+
+  /* --- TOKEN STRESS TEST: asymmetric, not 3-equal-columns ---
+     Wide color column on the left (the dominant signal), a narrow rail on
+     the right stacking form + grade. Varying column widths is the fix for
+     the templated 3-column grid. */
+  .stress-section {
+    padding: calc(var(--tv-space-unit) * 4) calc(var(--tv-space-unit) * 8);
+  }
+  .stress-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: calc(var(--tv-grid-gutter));
+    align-items: stretch;
+  }
+  .stress-rail {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-grid-gutter));
+  }
+  .stress-card {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    padding: calc(var(--tv-space-unit) * 4);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 3);
+    min-height: 8rem;
+  }
+  /* the color column is the dominant panel — give it more vertical weight */
+  .stress-color {
+    justify-content: center;
   }
 
   .hero {
@@ -319,15 +339,6 @@ const description = 'Connect your generated frontends, preview them live, tune t
     margin: 0;
   }
 
-  .body-section {
-    padding: calc(var(--tv-space-unit) * 8);
-  }
-
-  .body-content {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
   .section-heading {
     font-family: var(--tv-font-heading);
     font-weight: var(--tv-h1-weight);
@@ -341,6 +352,9 @@ const description = 'Connect your generated frontends, preview them live, tune t
     gap: calc(var(--tv-space-unit) * 12);
     align-items: start;
     margin-top: calc(var(--tv-space-unit) * 6);
+    /* editorial section keeps generous padding to vary the rhythm vs the
+       tighter stress section above it */
+    padding: 0 calc(var(--tv-space-unit) * 8);
   }
 
   .editorial-main {
@@ -423,25 +437,9 @@ const description = 'Connect your generated frontends, preview them live, tune t
     line-height: 1.4;
   }
 
-  /* --- TOKEN STRESS TEST --- */
-  .stress-block {
-    margin: calc(var(--tv-space-unit) * 8) 0;
-  }
-  .stress-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: calc(var(--tv-space-unit) * 4);
-  }
-  .stress-card {
-    border: var(--tv-border-width) solid var(--tv-border);
-    border-radius: var(--tv-radius);
-    background: var(--tv-surface);
-    padding: calc(var(--tv-space-unit) * 4);
-    display: flex;
-    flex-direction: column;
-    gap: calc(var(--tv-space-unit) * 3);
-    min-height: 8rem;
-  }
+  /* --- TOKEN STRESS TEST swatches + form/grade demos ---
+     The layout (.stress-section/.stress-layout/.stress-rail/.stress-card) is
+     defined above; these are the inner demos. */
   /* COLOR: live swatches, one per color token */
   .swatch-row { display: flex; flex-wrap: wrap; gap: calc(var(--tv-space-unit) * 1); }
   .swatch {
@@ -505,21 +503,19 @@ const description = 'Connect your generated frontends, preview them live, tune t
     .editorial-grid {
       grid-template-columns: 1fr;
       gap: calc(var(--tv-space-unit) * 8);
+      padding: 0 calc(var(--tv-space-unit) * 4);
     }
     .editorial-aside {
       position: static;
     }
-    .stress-grid {
+    .stress-layout {
       grid-template-columns: 1fr;
     }
     .page-intro,
     .variation-section,
-    .demo-label {
+    .stress-section {
       padding-left: calc(var(--tv-space-unit) * 4);
       padding-right: calc(var(--tv-space-unit) * 4);
-    }
-    .body-section {
-      padding: calc(var(--tv-space-unit) * 4);
     }
   }
 </style>

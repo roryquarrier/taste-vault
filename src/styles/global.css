@@ -93,32 +93,72 @@
 
 .tv-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  /* Asymmetric grid: wider primary track + narrower secondary, instead of
+     uniform equal columns. minmax(0,1fr) keeps images from overflowing (gate 50). */
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  grid-auto-rows: auto;
   gap: var(--tv-grid-gutter);
 }
+/* Visual hierarchy: the first card in each row-span gets extra prominence —
+   a taller tile + heading scale-up. Breaks the uniform-card template. */
+.tv-card-wrap:first-child .tv-card-tile,
+.tv-card-wrap:nth-child(5n+1) .tv-card-tile {
+  aspect-ratio: 16 / 9;
+}
+.tv-card-wrap:nth-child(5n+1) .tv-card-title {
+  font-size: calc(var(--tv-body-size) * 1.5);
+}
+/* every 7th card spans two columns for a deliberate rhythm break — not every
+   card identical, not a strict pattern either */
+.tv-card-wrap:nth-child(7n) {
+  grid-column: span 2;
+}
+.tv-card-wrap:nth-child(7n) .tv-card-tile {
+  aspect-ratio: 21 / 9;
+}
+@media (max-width: 768px) {
+  .tv-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tv-card-wrap:nth-child(7n) {
+    grid-column: auto;
+  }
+}
 
-/* --- library browser chrome --- */
+/* --- library browser chrome ---
+   Tabs are baseline-rule style (editorial) rather than the standard SaaS
+   pill-bar — sits on a shared hairline underline so the active tab reads as
+   a column marker, not a filled button. */
 .tv-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--tv-space-unit) * 2);
+  gap: calc(var(--tv-space-unit) * 4);
+  border-bottom: var(--tv-border-width) solid var(--tv-border);
 }
 .tv-tab {
   font-family: var(--tv-font-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 3);
-  border: var(--tv-border-width) solid var(--tv-border);
-  border-radius: var(--tv-radius);
+  padding: 0 calc(var(--tv-space-unit) * 1) calc(var(--tv-space-unit) * 3);
+  border: none;
+  border-bottom: calc(var(--tv-border-width) * 2) solid transparent;
+  margin-bottom: calc(var(--tv-border-width) * -1);
   background: transparent;
   color: var(--tv-fg-muted);
   cursor: pointer;
+  transition: color 0.15s var(--ease-out, ease-out), border-color 0.15s var(--ease-out, ease-out);
+}
+.tv-tab:hover {
+  color: var(--tv-fg);
+}
+.tv-tab:focus-visible {
+  outline: none;
+  border-bottom-color: var(--tv-fg-muted);
 }
 .tv-tab[aria-pressed="true"] {
-  color: var(--tv-bg);
-  background: var(--tv-accent);
-  border-color: var(--tv-accent);
+  color: var(--tv-accent);
+  border-bottom-color: var(--tv-accent);
 }
 .tv-tab:disabled { opacity: 0.35; cursor: not-allowed; }
 
@@ -669,10 +709,19 @@
   flex-wrap: wrap;
 }
 
+/* The select-mode toggle is a distinct control, not a family tab — give it
+   an accent-outline treatment so it doesn't disappear into the baseline rule. */
 .tv-tab--outline {
   background: transparent;
-  border-color: var(--tv-accent);
+  border: var(--tv-border-width) solid var(--tv-accent);
+  border-radius: var(--tv-radius);
   color: var(--tv-accent);
+  padding: calc(var(--tv-space-unit) * 2) calc(var(--tv-space-unit) * 3);
+  margin-bottom: 0;
+}
+.tv-tab--outline[aria-pressed="true"] {
+  background: var(--tv-accent);
+  color: var(--tv-bg);
 }
 
 .tv-card-wrap {

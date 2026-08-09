@@ -39,14 +39,23 @@ const inspirationData = entries.map(e => {
 
 <Base title="generate · taste-vault" description="Build a master design prompt from the library.">
   <section class="generate-page">
+    <!-- Asymmetric intro: statement on the wide track, a compact aside on the
+         narrow rail carrying the loop position. Breaks the centred-single-column
+         template and gives the bare wrapper real structure. -->
     <div class="generate-intro">
-      <h1 class="generate-title text-h1 tracking-h1 leading-h1 font-heading">Generate</h1>
-      <p class="generate-lede">
-        Step two of the loop. Fill in your product details and pick aesthetic directions
-        from the <a href={`${base}/library`} class="generate-link">library</a> — the builder
-        folds them into a single master brief with explicit instructions to avoid the usual
-        AI tells. Copy it into your AI frontend tool and get five committed variations in one shot.
-      </p>
+      <div class="generate-intro-main">
+        <h1 class="generate-title text-h1 tracking-h1 leading-h1 font-heading">Generate</h1>
+        <p class="generate-lede">
+          Step two of the loop. Fill in your product details and pick aesthetic directions
+          from the <a href={`${base}/library`} class="generate-link">library</a> — the builder
+          folds them into a single master brief with explicit instructions to avoid the usual
+          AI tells. Copy it into your AI frontend tool and get five committed variations in one shot.
+        </p>
+      </div>
+      <aside class="generate-loop" aria-label="where you are in the loop">
+        <p class="generate-loop-mark">02 / 03</p>
+        <p class="generate-loop-line">library → <span class="generate-loop-here">generate</span> → reference</p>
+      </aside>
     </div>
     <PromptBuilder client:load families={familyData} inspirations={inspirationData} />
   </section>
@@ -56,13 +65,19 @@ const inspirationData = entries.map(e => {
   .generate-page {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--tv-space-unit) * 8);
+    gap: calc(var(--tv-space-unit) * 12);
   }
   .generate-intro {
-    max-width: var(--tv-measure);
+    display: grid;
+    grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
+    gap: calc(var(--tv-space-unit) * 10);
+    align-items: end;
+  }
+  .generate-intro-main {
     display: flex;
     flex-direction: column;
     gap: calc(var(--tv-space-unit) * 4);
+    max-width: var(--tv-measure);
   }
   .generate-title {
     margin: 0;
@@ -79,5 +94,40 @@ const inspirationData = entries.map(e => {
   }
   .generate-link:hover {
     opacity: 0.85;
+  }
+  /* compact loop-position aside — mirrors the spec-sheet voice on the home
+     page so the system reads as one design, but smaller and right-aligned */
+  .generate-loop {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    padding: calc(var(--tv-space-unit) * 4);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 2);
+  }
+  .generate-loop-mark {
+    margin: 0;
+    font-family: var(--tv-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tv-accent);
+  }
+  .generate-loop-line {
+    margin: 0;
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    line-height: var(--tv-body-leading);
+    color: var(--tv-fg-muted);
+  }
+  .generate-loop-here {
+    color: var(--tv-fg);
+  }
+  @media (max-width: 768px) {
+    .generate-intro {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
   }
 </style>
