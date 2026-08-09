@@ -9,7 +9,19 @@ type Props = {
   families: FamilyMeta[]
 }
 
-function CardTile({ card, selected, onToggle }: { card: CardData; selected: boolean; onToggle?: (id: string) => void }) {
+function CardTile({
+  card,
+  selected,
+  onToggle,
+  onDelete,
+  deleting,
+}: {
+  card: CardData
+  selected: boolean
+  onToggle?: (id: string) => void
+  onDelete: (card: CardData) => void
+  deleting: boolean
+}) {
   const monogram = card.title
     .split(/\s+/)
     .slice(0, 2)
@@ -62,11 +74,24 @@ function CardTile({ card, selected, onToggle }: { card: CardData; selected: bool
           {selected ? '✓ selected' : '+ select'}
         </button>
       )}
+      <button
+        type="button"
+        className="tv-card-delete"
+        onClick={() => onDelete(card)}
+        disabled={deleting}
+        title={`Delete ${card.title}`}
+        aria-label={`Delete ${card.title}`}
+      >
+        {deleting ? '…' : '✕'}
+      </button>
     </div>
   )
 }
 
-export default function LibraryBrowser({ cards, families }: Props) {
+export default function LibraryBrowser({ cards: initialCards, families }: Props) {
+  const [cards, setCards] = useState<CardData[]>(initialCards)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [status, setStatus] = useState<string>('')
   const [query, setQuery] = useState('')
   const [family, setFamily] = useState<string>('all')
   const [selectMode, setSelectMode] = useState(false)
@@ -126,6 +151,33 @@ export default function LibraryBrowser({ cards, families }: Props) {
     })
   }
 
+  async function deleteCard(card: CardData) {
+    if (!window.confirm(`Delete '${card.title}'?`)) return
+    setDeletingId(card.id)
+    setStatus('')
+    try {
+      const res = await fetch('/api/inspirations/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ path: card.id }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) throw new Error(data?.error ?? 'delete failed')
+      setCards((prev) => prev.filter((c) => c.id !== card.id))
+      setSelected((prev) => {
+        if (!prev.has(card.id)) return prev
+        const next = new Set(prev)
+        next.delete(card.id)
+        return next
+      })
+      setStatus(`deleted '${card.title}'`)
+    } catch (err) {
+      setStatus(`failed: ${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   function sendToGenerate() {
     const ids = Array.from(selected).join(',')
     window.location.href = `/generate?refs=${ids}`
@@ -183,6 +235,7 @@ export default function LibraryBrowser({ cards, families }: Props) {
       <p className="tv-count" aria-live="polite">
         {visible.length} of {cards.length} references
         {selectMode && selected.size > 0 && ` · ${selected.size}/5 selected`}
+        {status && ` · ${status}`}
       </p>
 
       {visible.length === 0 ? (
@@ -195,6 +248,8 @@ export default function LibraryBrowser({ cards, families }: Props) {
               card={c}
               selected={selected.has(c.id)}
               onToggle={selectMode ? toggleSelect : undefined}
+              onDelete={deleteCard}
+              deleting={deletingId === c.id}
             />
           ))}
         </div>

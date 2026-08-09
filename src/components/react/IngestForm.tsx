@@ -101,7 +101,7 @@ export default function IngestForm({ families }: Props) {
           </div>
 
           {url && (
-            <pre className="tv-pb-output" style="margin-top: calc(var(--tv-space-unit) * 3)">{submission}</pre>
+            <pre className="tv-pb-output" style={{ marginTop: 'calc(var(--tv-space-unit) * 3)' }}>{submission}</pre>
           )}
         </div>
       )}

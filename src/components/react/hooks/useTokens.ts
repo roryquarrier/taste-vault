@@ -3,6 +3,7 @@ import { DEFAULTS, EDITABLE } from '../../../tokens/defaults'
 import { TOKENS_SCHEMA_VERSION } from '../../../tokens/schema'
 import { clearStored, loadStored, saveStored } from '../../../lib/storage'
 import { $tokens } from '../../../lib/tokenStore'
+import { applyTokensToFrames, clearTokensOnFrames } from '../../../lib/iframeTokens'
 
 const EDITABLE_NAMES = new Set(EDITABLE.map((t) => t.name))
 
@@ -28,12 +29,16 @@ export function useTokens() {
     frame.current = null
     const style = document.documentElement.style
     for (const [name, value] of pending.current) style.setProperty(name, value)
+    // Custom properties don't cross the iframe boundary — fan the same writes
+    // out to every loaded variation frame. [iframeTokens]
+    applyTokensToFrames(pending.current)
     pending.current.clear()
   }, [])
 
   const applyAll = useCallback((next: Record<string, string>) => {
     const style = document.documentElement.style
     for (const [name, value] of Object.entries(next)) style.setProperty(name, value)
+    applyTokensToFrames(next)
   }, [])
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export function useTokens() {
     }
     const style = document.documentElement.style
     for (const name of EDITABLE_NAMES) style.removeProperty(name)
+    clearTokensOnFrames(EDITABLE_NAMES)
     clearStored()
     latest.current = DEFAULTS
     setValues(DEFAULTS)

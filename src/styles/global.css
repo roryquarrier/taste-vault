@@ -171,6 +171,15 @@
   font-weight: 700;
 }
 .tv-btn--download:hover { opacity: 0.85; }
+.tv-btn--prompt {
+  border-color: var(--tv-accent);
+  color: var(--tv-accent);
+  font-weight: 700;
+}
+.tv-btn--prompt:hover {
+  background: var(--tv-accent);
+  color: var(--tv-bg);
+}
 .tv-btn[aria-pressed="true"] {
   background: var(--tv-accent-2);
   border-color: var(--tv-accent-2);
@@ -701,6 +710,36 @@
   background: var(--tv-accent);
   color: var(--tv-bg);
   border-color: var(--tv-accent);
+}
+
+.tv-card-delete {
+  position: absolute;
+  top: calc(var(--tv-space-unit) * 2);
+  left: calc(var(--tv-space-unit) * 2);
+  font-family: var(--tv-font-mono);
+  font-size: 0.625rem;
+  line-height: 1;
+  padding: calc(var(--tv-space-unit) * 1.5);
+  border: var(--tv-border-width) solid var(--tv-border);
+  border-radius: var(--tv-radius);
+  background: var(--tv-bg);
+  color: var(--tv-fg-muted);
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  transition: all 0.15s;
+}
+.tv-card-wrap:hover .tv-card-delete,
+.tv-card-delete:focus-visible {
+  opacity: 1;
+}
+.tv-card-delete:hover {
+  border-color: var(--tv-danger, #c0392b);
+  color: var(--tv-danger, #c0392b);
+}
+.tv-card-delete:disabled {
+  opacity: 1;
+  cursor: wait;
 }
 
 .tv-selection-bar {

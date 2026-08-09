@@ -85,6 +85,31 @@ const { title = 'taste-vault', description = 'A vault of aesthetic references an
   main:has(.tv-panel) {
     padding-right: 340px;
   }
+  /* The header is a sibling of <main>, so the rule above doesn't clear it.
+     The panel toggle is fixed top-right at z-index 1001 and would sit on top of
+     the last nav link — reserve room for it in the header too. Applies in both
+     panel states, since the toggle stays top-right when the panel is closed. */
+  body:has(.tv-panel) .tv-header {
+    padding-right: calc(var(--tv-space-unit) * 8 + 120px);
+  }
+  /* Panel open: the 320px drawer itself covers the header edge, so clear it fully. */
+  body:has(.tv-panel:not(.tv-panel--closed)) .tv-header {
+    padding-right: 340px;
+  }
+  /* Narrow screens can't spare 340px — let the header wrap instead. */
+  @media (max-width: 720px) {
+    .tv-header {
+      flex-wrap: wrap;
+      row-gap: calc(var(--tv-space-unit) * 2);
+    }
+    body:has(.tv-panel) .tv-header,
+    body:has(.tv-panel:not(.tv-panel--closed)) .tv-header {
+      padding-right: calc(var(--tv-space-unit) * 8 + 120px);
+    }
+    main:has(.tv-panel) {
+      padding-right: calc(var(--tv-space-unit) * 8);
+    }
+  }
   a {
     color: inherit;
   }

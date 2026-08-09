@@ -3,83 +3,33 @@ import Base from '../layouts/Base.astro'
 import TweaksPanel from '../components/react/TweaksPanel.tsx'
 import VariationViewer from '../components/react/VariationViewer.tsx'
 
-const title = 'Book Restorer — Reference Page'
-const description = 'Hand-built reference page for the tweaks panel. Every visual value comes from a token.'
+const title = 'Design Reference — taste-vault'
+const description = 'Connect your generated frontends, preview them live, tune the design tokens, and export the CSS.'
 ---
 
 <Base title={title} description={description}>
-  <!-- Variation Viewer at top: connect folder, browse generations -->
+  <!-- Orientation header: what this page is, in one glance -->
+  <header class="page-intro">
+    <p class="mono-label">taste-vault · reference</p>
+    <h1 class="page-intro-title text-h1">Design Reference</h1>
+    <p class="page-intro-sub">
+      Connect your generated frontends, preview them live, tune the design
+      tokens, and export the CSS.
+    </p>
+  </header>
+
+  <!-- 1 · Connect & Preview -->
   <section class="variation-section">
+    <p class="mono-label section-label">1 · Connect &amp; Preview</p>
     <VariationViewer client:visible />
   </section>
 
   <div class="reference-page">
-    <!-- Hero section -->
-    <section class="hero">
-      <div class="hero-content">
-        <p class="mono-label">PLATE I-A · REFERENCE</p>
-        <h1 class="hero-heading text-h1">Restore your books.</h1>
-        <p class="hero-sub">Upload a scanned PDF. Get a clean, digital copy in minutes.</p>
-        <div class="cta-row">
-          <button class="cta-primary">RESTORE NOW</button>
-          <a class="cta-secondary" href="/library">BROWSE STYLES →</a>
-        </div>
-      </div>
-      <!--
-        .tv-graded is the grade-token target.
-        [FIX] The hero placeholder now carries a rich gradient that the grade
-        filter (saturation/contrast/brightness/warmth) can actually act on, plus
-        an inner .hero-pos-target that the image tokens (pos-x/pos-y/scale)
-        transform visibly even though there is no <img>. Grain overlays via
-        .tv-graded::after (opacity = --tv-grade-grain).
-      -->
-      <div class="hero-image-slot tv-graded">
-        <div class="hero-pos-target">
-          <div class="hero-placeholder">
-            <span class="placeholder-text">HERO IMAGE</span>
-            <span class="placeholder-sub">hero filter + grain + pos/scale apply here</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Body section -->
+    <!-- 2 · Token Preview: proves the tokens are live before the panel opens -->
     <section class="body-section">
       <div class="body-content">
-        <p class="mono-label">§1 · HOW IT WORKS</p>
-        <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Three steps. Ten minutes.</h2>
-
-        <div class="services-grid" style="gap: var(--tv-grid-gutter);">
-          <div class="service-card">
-            <p class="mono-label">01</p>
-            <h3>Upload</h3>
-            <p>Drop your scanned PDF. We extract every page.</p>
-          </div>
-          <div class="service-card">
-            <p class="mono-label">02</p>
-            <h3>Restore</h3>
-            <p>AI cleans each page. Text becomes selectable. Colour returns.</p>
-          </div>
-          <div class="service-card">
-            <p class="mono-label">03</p>
-            <h3>Download</h3>
-            <p>Clean PDF, ready to print or share. Done.</p>
-          </div>
-        </div>
-
-        <div class="measure-block">
-          <p class="mono-label">§2 · DETAIL</p>
-          <p>Every restored book goes through a multi-stage pipeline: page extraction, AI-driven restoration, OCR for selectable text, and PDF reassembly. The result is a clean, professional digital copy that looks better than the original.</p>
-          <p>Drag any slider in the panel to see how token changes affect this page in real time. Every visual value — font, size, colour, spacing, radius — comes from a CSS custom property defined in tokens.json.</p>
-        </div>
-
-        <!--
-          [FIX] Token-stress block. Every group gets at least one element that
-          only responds to its tokens, so dragging a slider in any group produces
-          an unambiguous visible change on this page.
-        -->
+        <p class="mono-label section-label">2 · Token Preview</p>
         <div class="stress-block">
-          <p class="mono-label">§3 · TOKEN STRESS TEST</p>
           <div class="stress-grid" style="gap: var(--tv-grid-gutter);">
             <!-- COLOR: accent + accent-2 swatches that recompute live -->
             <div class="stress-card stress-color">
@@ -107,6 +57,66 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
       </div>
     </section>
 
+    <!-- 3 · Layout demo — generic placeholder content, tokens applied throughout -->
+    <p class="mono-label section-label demo-label">LAYOUT DEMO · tokens applied here</p>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="mono-label">HERO</p>
+        <h1 class="hero-heading text-h1">Your Product Name</h1>
+        <p class="hero-sub">A short description of what this product does.</p>
+        <div class="cta-row">
+          <button class="cta-primary">PRIMARY ACTION</button>
+          <a class="cta-secondary" href="#">SECONDARY LINK →</a>
+        </div>
+      </div>
+      <!--
+        .tv-graded is the grade-token target.
+        [FIX] The hero placeholder now carries a rich gradient that the grade
+        filter (saturation/contrast/brightness/warmth) can actually act on, plus
+        an inner .hero-pos-target that the image tokens (pos-x/pos-y/scale)
+        transform visibly even though there is no <img>. Grain overlays via
+        .tv-graded::after (opacity = --tv-grade-grain).
+      -->
+      <div class="hero-image-slot tv-graded">
+        <div class="hero-pos-target">
+          <div class="hero-placeholder">
+            <span class="placeholder-text">HERO IMAGE</span>
+            <span class="placeholder-sub">hero filter + grain + pos/scale apply here</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout demo, continued: feature grid + body copy -->
+    <section class="body-section">
+      <div class="body-content">
+        <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Section Heading</h2>
+
+        <div class="services-grid" style="gap: var(--tv-grid-gutter);">
+          <div class="service-card">
+            <p class="mono-label">01</p>
+            <h3>Feature One</h3>
+            <p>Placeholder text describing the first feature in a sentence or two.</p>
+          </div>
+          <div class="service-card">
+            <p class="mono-label">02</p>
+            <h3>Feature Two</h3>
+            <p>Placeholder text describing the second feature in a sentence or two.</p>
+          </div>
+          <div class="service-card">
+            <p class="mono-label">03</p>
+            <h3>Feature Three</h3>
+            <p>Placeholder text describing the third feature in a sentence or two.</p>
+          </div>
+        </div>
+
+        <div class="measure-block">
+          <p>This paragraph is placeholder body copy. It exists to show the body font, size, leading, colour and measure at a realistic length, so type tokens can be judged against running text rather than a single line.</p>
+          <p>Drag any control in the tweaks panel to see token changes land here and inside the connected variation above. Every visual value — font, size, colour, spacing, radius — comes from a CSS custom property defined in tokens.json.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="reference-footer">
       <div class="footer-content">
@@ -120,6 +130,44 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
 </Base>
 
 <style>
+  /* --- orientation header: tells a first-time visitor what this page is --- */
+  .page-intro {
+    background: var(--tv-bg);
+    color: var(--tv-fg);
+    font-family: var(--tv-font-body);
+    padding: calc(var(--tv-space-unit) * 8) calc(var(--tv-space-unit) * 8)
+      calc(var(--tv-space-unit) * 4);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 2);
+  }
+  .page-intro-title {
+    font-family: var(--tv-font-heading);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: var(--tv-h1-leading);
+    margin: 0;
+  }
+  .page-intro-sub {
+    color: var(--tv-fg-muted);
+    max-width: var(--tv-measure);
+    margin: 0;
+  }
+
+  /* numbered step labels for the three page sections */
+  .section-label {
+    margin-bottom: calc(var(--tv-space-unit) * 2);
+  }
+  .demo-label {
+    padding: 0 calc(var(--tv-space-unit) * 8);
+    margin-top: calc(var(--tv-space-unit) * 6);
+  }
+
+  .variation-section {
+    padding: 0 calc(var(--tv-space-unit) * 8) calc(var(--tv-space-unit) * 4);
+    background: var(--tv-bg);
+  }
+
   .reference-page {
     min-height: 100vh;
     background: var(--tv-bg);
@@ -383,6 +431,15 @@ const description = 'Hand-built reference page for the tweaks panel. Every visua
     .services-grid,
     .stress-grid {
       grid-template-columns: 1fr;
+    }
+    .page-intro,
+    .variation-section,
+    .demo-label {
+      padding-left: calc(var(--tv-space-unit) * 4);
+      padding-right: calc(var(--tv-space-unit) * 4);
+    }
+    .body-section {
+      padding: calc(var(--tv-space-unit) * 4);
     }
   }
 </style>

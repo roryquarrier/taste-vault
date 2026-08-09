@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { applyTokensToFrame } from '../../lib/iframeTokens'
+import { $tokens } from '../../lib/tokenStore'
 
 /**
  * VariationViewer
@@ -20,11 +22,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
  * persist a live handle across reloads). A third fallback — a plain multi-file
  * `<input type="file">` — covers browsers that reject the directory attribute.
  *
- * IMPORTANT LIMITATION: each variation renders inside a sandboxed <iframe>.
- * The TweaksPanel sets CSS custom properties on documentElement of the *parent*
- * document, which does NOT cascade into cross-origin iframe content. So tweaks
- * affect the reference page chrome and any same-document token previews, but
- * NOT the loaded HTML variation. A note is shown in the UI to make this clear.
+ * Live tokens: custom properties do not cascade into an iframe, so on every
+ * frame load we push the current token values straight onto the frame's own
+ * documentElement (see `lib/iframeTokens`). Subsequent TweaksPanel edits fan out
+ * from `useTokens`' flush, so a loaded variation stays in sync while dragging.
  */
 
 // ---- types -----------------------------------------------------------------
@@ -175,6 +176,17 @@ export default function VariationViewer() {
 
   const dirInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const frameRef = useRef<HTMLIFrameElement>(null)
+
+  /**
+   * Push every current token value into the frame the moment it finishes
+   * loading — a freshly switched tab must arrive already tuned, not snap into
+   * place on the next slider drag.
+   */
+  const syncFrame = useCallback(() => {
+    const frame = frameRef.current
+    if (frame) applyTokensToFrame(frame, $tokens.get())
+  }, [])
 
   // SSR guard: only do browser-only work after mount.
   useEffect(() => {
@@ -455,9 +467,12 @@ export default function VariationViewer() {
             {currentFile ? (
               <iframe
                 key={currentFile.url}
+                ref={frameRef}
+                onLoad={syncFrame}
                 src={currentFile.url}
                 title={`${current.label} — ${currentFile.name}`}
                 className="tv-vv-iframe"
+                data-variation-frame=""
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
               />
             ) : (
@@ -467,13 +482,12 @@ export default function VariationViewer() {
             )}
           </div>
 
-          {/* --- limitation note --- */}
+          {/* --- live-token note --- */}
           <p className="tv-vv-note">
-            <strong>Note:</strong> variations render inside a sandboxed iframe.
-            The TweaksPanel edits CSS variables on this page's{' '}
-            <code>documentElement</code>, which <em>does not</em> cascade into
-            cross-origin iframe content — so tweaks won't visually affect the
-            loaded variation. They still affect the reference page chrome around it.
+            <strong>Live tokens:</strong> the loaded variation receives every{' '}
+            <code>--tv-*</code> value from the TweaksPanel, so edits show up here
+            in real time and a newly opened tab arrives already tuned. A variation
+            only responds to the tokens its own CSS actually references.
           </p>
         </>
       )}
