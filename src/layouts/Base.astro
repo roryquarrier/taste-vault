@@ -10,7 +10,7 @@ const { title = 'taste-vault', description = 'A vault of aesthetic references an
   Astro.props
 
 // Astro resolves the configured `base` path here — "/" locally, "/taste-vault/" on Pages.
-const base = import.meta.env.BASE_URL
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 ---
 
 <!doctype html>
@@ -39,11 +39,11 @@ const base = import.meta.env.BASE_URL
   </head>
   <body>
     <header class="tv-header">
-      <a href={base} class="tv-wordmark">taste&#8209;vault</a>
+      <a href={`${base}/`} class="tv-wordmark">taste&#8209;vault</a>
       <nav>
-        <a href={`${base}library`}>library</a>
-        <a href={`${base}generate`}>generate</a>
-        <a href={`${base}reference`}>reference</a>
+        <a href={`${base}/library`}>library</a>
+        <a href={`${base}/generate`}>generate</a>
+        <a href={`${base}/reference`}>reference</a>
       </nav>
     </header>
     <main>

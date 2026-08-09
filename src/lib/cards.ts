@@ -59,7 +59,7 @@ export async function toCardData(
     description: e.data.description,
     vocabulary: e.data.vocabulary,
     featured: e.data.featured,
-    href: `/library/${e.id}`,
+    href: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/library/${e.id}`,
     license: e.data.source.license,
     image,
   }

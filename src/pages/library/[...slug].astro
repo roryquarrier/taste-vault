@@ -9,7 +9,7 @@ import { familyIdOf } from '../../lib/cards'
 import { buildBriefBlock } from '../../lib/brief'
 import { buildImagePrompt } from '../../lib/imagePrompt'
 
-const base = import.meta.env.BASE_URL
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 import { ACTIVE } from '../../tokens/defaults'
 
 export async function getStaticPaths() {
@@ -59,7 +59,7 @@ const heroImage = entry.data.publishAsset ? (entry.data.full ?? entry.data.thumb
 <Base title={`${entry.data.title} · taste-vault`} description={entry.data.description}>
   <article class="tv-detail">
     <p class="tv-card-family">
-      <a href={`${base}library`}>library</a> / {family.data.name}
+      <a href={`${base}/library`}>library</a> / {family.data.name}
     </p>
     <h1 class="text-h1 tracking-h1 leading-h1 font-heading">{entry.data.title}</h1>
     <p class="tv-lede">{entry.data.description}</p>
