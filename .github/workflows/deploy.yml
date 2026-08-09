@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
+      - run: npm install
       - run: npm run build
         env:
           # Prevent the dev-only middleware import from breaking CI.
