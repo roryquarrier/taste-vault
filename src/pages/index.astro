@@ -5,16 +5,344 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 ---
 
 <Base>
-  <section style="max-width: var(--tv-measure); display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 5)">
-    <h1 class="text-h1 tracking-h1 leading-h1 font-heading text-accent">taste-vault</h1>
-    <p class="text-body leading-body font-body text-fg-muted">
-      A vault of aesthetic references and a live token panel. Browse the library to pull a
-      generator brief for any reference, or open the reference page to tune every token in
-      the design system and export the result.
-    </p>
-    <p class="font-mono" style="display:flex; gap:calc(var(--tv-space-unit) * 6)">
-      <a class="text-accent-2" href={`${base}/library`}>/library</a>
-      <a class="text-accent-2" href={`${base}/reference`}>/reference</a>
-    </p>
-  </section>
+  <div class="home">
+    <!-- Opening statement: left-aligned, with a spec sheet aside -->
+    <section class="opening">
+      <div class="opening-main">
+        <p class="kicker">a design-token playground</p>
+        <h1 class="opening-title">Design systems, not templates.</h1>
+        <p class="opening-lede">
+          taste-vault is a workbench for aesthetic direction. It keeps a library of
+          curated references, compiles them into prompts for your AI frontend tool,
+          and hands you a live token panel to tune whatever comes back — so the
+          output looks like a decision, not a default.
+        </p>
+        <p class="opening-links">
+          <a class="opening-cta" href={`${base}/library`}>browse the library →</a>
+          <a class="opening-alt" href={`${base}/generate`}>or straight to the prompt builder</a>
+        </p>
+      </div>
+      <aside class="spec-sheet" aria-label="system spec">
+        <p class="spec-title">spec</p>
+        <div class="spec-row"><span class="spec-key">stack</span><span class="spec-val">astro · react · tailwind</span></div>
+        <div class="spec-row"><span class="spec-key">tokens</span><span class="spec-val">29 editable css custom properties</span></div>
+        <div class="spec-row"><span class="spec-key">loop</span><span class="spec-val">browse → prompt → generate → tune</span></div>
+        <div class="spec-row"><span class="spec-key">output</span><span class="spec-val">one stylesheet, exported</span></div>
+      </aside>
+    </section>
+
+    <!-- The loop, illustrated -->
+    <figure class="hero-figure">
+      <img
+        src={`${base}/hero-workflow.png`}
+        alt="Illustration of the taste-vault workflow in four steps: a shelf of references, a prompt sheet, a stack of generated variations, and a hand tuning sliders."
+        loading="eager"
+      />
+      <figcaption>
+        fig. 01 — the vault loop: browse references, build the prompt, generate
+        variations, tune tokens live.
+      </figcaption>
+    </figure>
+
+    <!-- The four passes, as an index rather than a card row -->
+    <section class="workflow">
+      <h2 class="section-title">The loop, end to end</h2>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">01</span>
+          <h3 class="step-title">Browse the vault</h3>
+          <p class="step-desc">
+            The library holds curated aesthetic directions — each one carries the
+            vocabulary, palette, imagery and guardrails a generator needs to
+            reproduce it. Filter by family, search the terms, shortlist what fits
+            the product.
+          </p>
+          <a class="step-link" href={`${base}/library`}>/library →</a>
+        </li>
+        <li class="step">
+          <span class="step-num">02</span>
+          <h3 class="step-title">Build the prompt</h3>
+          <p class="step-desc">
+            The prompt builder folds your product details and chosen directions
+            into a single master brief — five variations in one shot, with explicit
+            instructions to avoid the usual AI tells.
+          </p>
+          <a class="step-link" href={`${base}/generate`}>/generate →</a>
+        </li>
+        <li class="step">
+          <span class="step-num">03</span>
+          <h3 class="step-title">Generate &amp; compare</h3>
+          <p class="step-desc">
+            Paste the brief into your AI frontend tool, then point the reference
+            page at the exported files. Flip through every variation and iteration
+            without leaving the browser.
+          </p>
+          <a class="step-link" href={`${base}/reference`}>/reference →</a>
+        </li>
+        <li class="step">
+          <span class="step-num">04</span>
+          <h3 class="step-title">Tune it live</h3>
+          <p class="step-desc">
+            Colour, type, radius, spacing and grade are all live custom properties.
+            Drag the panel until it looks right, then export the CSS — the tokens
+            travel with you.
+          </p>
+          <a class="step-link" href={`${base}/reference`}>/reference →</a>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Closing note: the site is its own demo -->
+    <section class="closing">
+      <h2 class="section-title">Nothing here is hardcoded</h2>
+      <p>
+        Every page on this site — this one included — is styled entirely by the
+        vault's tokens: colour, type, radius, spacing and grade all read from CSS
+        custom properties. Open the reference page, drag a control in the tweaks
+        panel, and watch the system redraw itself. When it looks right, export the
+        CSS and take it into your project.
+      </p>
+      <a class="closing-link" href={`${base}/reference`}>open the reference page and drag a slider →</a>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .home {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 14);
+    padding-top: calc(var(--tv-space-unit) * 6);
+  }
+
+  /* --- opening statement --- */
+  .opening {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: calc(var(--tv-space-unit) * 10);
+    align-items: end;
+  }
+  .opening-main {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 4);
+  }
+  .kicker {
+    margin: 0;
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tv-accent);
+  }
+  .opening-title {
+    margin: 0;
+    font-family: var(--tv-font-heading);
+    font-size: var(--tv-h1-size);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: var(--tv-h1-leading);
+    color: var(--tv-fg);
+    max-width: 14ch;
+  }
+  .opening-lede {
+    margin: 0;
+    font-size: calc(var(--tv-body-size) * 1.15);
+    line-height: var(--tv-body-leading);
+    color: var(--tv-fg-muted);
+    max-width: var(--tv-measure);
+  }
+  .opening-links {
+    margin: calc(var(--tv-space-unit) * 2) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: calc(var(--tv-space-unit) * 5);
+  }
+  .opening-cta {
+    font-family: var(--tv-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--tv-accent);
+    border: var(--tv-border-width) solid var(--tv-accent);
+    border-radius: var(--tv-radius);
+    padding: calc(var(--tv-space-unit) * 2.5) calc(var(--tv-space-unit) * 4);
+  }
+  .opening-cta:hover {
+    background: var(--tv-accent);
+    color: var(--tv-bg);
+  }
+  .opening-alt {
+    font-size: 0.875rem;
+    color: var(--tv-fg-muted);
+    text-decoration: none;
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+    padding-bottom: calc(var(--tv-space-unit) * 1);
+  }
+  .opening-alt:hover {
+    color: var(--tv-fg);
+    border-bottom-color: var(--tv-fg-muted);
+  }
+
+  /* --- spec sheet aside --- */
+  .spec-sheet {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    padding: calc(var(--tv-space-unit) * 5);
+    display: flex;
+    flex-direction: column;
+  }
+  .spec-title {
+    margin: 0 0 calc(var(--tv-space-unit) * 2);
+    padding-bottom: calc(var(--tv-space-unit) * 2);
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+    font-family: var(--tv-font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tv-fg-muted);
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: calc(var(--tv-space-unit) * 4);
+    padding: calc(var(--tv-space-unit) * 2.5) 0;
+    border-bottom: var(--tv-border-width) dashed var(--tv-border);
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+  }
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-key {
+    color: var(--tv-fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.6875rem;
+    flex-shrink: 0;
+  }
+  .spec-val {
+    color: var(--tv-fg);
+    text-align: right;
+  }
+
+  /* --- workflow figure --- */
+  .hero-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 3);
+  }
+  .hero-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+  }
+  .hero-figure figcaption {
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    color: var(--tv-fg-muted);
+    max-width: var(--tv-measure);
+  }
+
+  /* --- the loop, as an index --- */
+  .section-title {
+    margin: 0;
+    font-family: var(--tv-font-heading);
+    font-size: calc(var(--tv-h1-size) * 0.45);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: var(--tv-h1-leading);
+    color: var(--tv-fg);
+  }
+  .steps {
+    list-style: none;
+    margin: calc(var(--tv-space-unit) * 6) 0 0;
+    padding: 0;
+    border-top: var(--tv-border-width) solid var(--tv-border);
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1.2fr) minmax(0, 2fr) auto;
+    gap: calc(var(--tv-space-unit) * 6);
+    align-items: baseline;
+    padding: calc(var(--tv-space-unit) * 5) 0;
+    border-bottom: var(--tv-border-width) solid var(--tv-border);
+  }
+  .step-num {
+    font-family: var(--tv-font-mono);
+    font-size: 0.8125rem;
+    color: var(--tv-accent);
+  }
+  .step-title {
+    margin: 0;
+    font-family: var(--tv-font-heading);
+    font-size: calc(var(--tv-body-size) * 1.25);
+    letter-spacing: var(--tv-h1-tracking);
+    color: var(--tv-fg);
+  }
+  .step-desc {
+    margin: 0;
+    color: var(--tv-fg-muted);
+    max-width: var(--tv-measure);
+  }
+  .step-link {
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--tv-accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .step-link:hover {
+    text-decoration: underline;
+    text-underline-offset: calc(var(--tv-space-unit) * 1);
+  }
+
+  /* --- closing note --- */
+  .closing {
+    max-width: var(--tv-measure);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 4);
+    padding-bottom: calc(var(--tv-space-unit) * 4);
+  }
+  .closing p {
+    margin: 0;
+    color: var(--tv-fg-muted);
+  }
+  .closing-link {
+    font-family: var(--tv-font-mono);
+    font-size: 0.8125rem;
+    color: var(--tv-accent);
+    text-decoration: none;
+    align-self: flex-start;
+    border-bottom: var(--tv-border-width) solid var(--tv-accent);
+    padding-bottom: calc(var(--tv-space-unit) * 1);
+  }
+  .closing-link:hover {
+    opacity: 0.85;
+  }
+
+  @media (max-width: 900px) {
+    .opening {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .step {
+      grid-template-columns: 3rem minmax(0, 1fr);
+      row-gap: calc(var(--tv-space-unit) * 2);
+    }
+    .step-desc,
+    .step-link {
+      grid-column: 2;
+    }
+  }
+</style>

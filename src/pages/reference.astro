@@ -57,62 +57,75 @@ const description = 'Connect your generated frontends, preview them live, tune t
       </div>
     </section>
 
-    <!-- 3 · Layout demo — generic placeholder content, tokens applied throughout -->
-    <p class="mono-label section-label demo-label">LAYOUT DEMO · tokens applied here</p>
+    <!-- Layout specimen: editorial content that exercises every token family -->
+    <p class="mono-label section-label demo-label">specimen — every token, applied</p>
     <section class="hero">
       <div class="hero-content">
-        <p class="mono-label">HERO</p>
-        <h1 class="hero-heading text-h1">Your Product Name</h1>
-        <p class="hero-sub">A short description of what this product does.</p>
+        <h1 class="hero-heading text-h1">The vault renders itself.</h1>
+        <p class="hero-sub">
+          This page is its own proof. Every colour, type choice, radius, spacing value
+          and image grade you see is a live CSS custom property. Open the tweaks panel
+          and drag a slider — the system redraws in front of you.
+        </p>
         <div class="cta-row">
-          <button class="cta-primary">PRIMARY ACTION</button>
-          <a class="cta-secondary" href="#">SECONDARY LINK →</a>
+          <button class="cta-primary">drag a slider →</button>
+          <a class="cta-secondary" href="#" onclick="document.querySelector('.tv-btn--download')?.click();return false">export the css</a>
         </div>
       </div>
-      <!--
-        .tv-graded is the grade-token target.
-        [FIX] The hero placeholder now carries a rich gradient that the grade
-        filter (saturation/contrast/brightness/warmth) can actually act on, plus
-        an inner .hero-pos-target that the image tokens (pos-x/pos-y/scale)
-        transform visibly even though there is no <img>. Grain overlays via
-        .tv-graded::after (opacity = --tv-grade-grain).
-      -->
       <div class="hero-image-slot tv-graded">
         <div class="hero-pos-target">
           <div class="hero-placeholder">
-            <span class="placeholder-text">HERO IMAGE</span>
-            <span class="placeholder-sub">hero filter + grain + pos/scale apply here</span>
+            <span class="placeholder-text">grade target</span>
+            <span class="placeholder-sub">saturation · contrast · warmth · grain · scale</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Layout demo, continued: feature grid + body copy -->
     <section class="body-section">
       <div class="body-content">
-        <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Section Heading</h2>
-
-        <div class="services-grid" style="gap: var(--tv-grid-gutter);">
-          <div class="service-card">
-            <p class="mono-label">01</p>
-            <h3>Feature One</h3>
-            <p>Placeholder text describing the first feature in a sentence or two.</p>
+        <div class="editorial-grid">
+          <div class="editorial-main">
+            <h2 class="section-heading text-h1" style="font-size: var(--tv-h1-size);">Why tokens, not templates.</h2>
+            <p>
+              A template gives you a finished look. A token system gives you the
+              decisions behind that look — separated from the markup, editable in
+              isolation, and portable to any project that reads CSS custom properties.
+            </p>
+            <p>
+              Drag the accent hue and every swatch, button, link, and grade filter on
+              this page follows. Change the body size and the running text rescales
+              without touching the heading. That is the point: the system is the
+              source of truth, not the page.
+            </p>
+            <blockquote class="pull-quote">
+              The token is the decision. The page is just where the decision lands.
+            </blockquote>
+            <p>
+              When the system looks right, export the CSS. The tokens travel into your
+              project as a single stylesheet — no build step, no runtime, no dependency.
+              Paste it into the generated frontend and it inherits every decision.
+            </p>
           </div>
-          <div class="service-card">
-            <p class="mono-label">02</p>
-            <h3>Feature Two</h3>
-            <p>Placeholder text describing the second feature in a sentence or two.</p>
-          </div>
-          <div class="service-card">
-            <p class="mono-label">03</p>
-            <h3>Feature Three</h3>
-            <p>Placeholder text describing the third feature in a sentence or two.</p>
-          </div>
-        </div>
-
-        <div class="measure-block">
-          <p>This paragraph is placeholder body copy. It exists to show the body font, size, leading, colour and measure at a realistic length, so type tokens can be judged against running text rather than a single line.</p>
-          <p>Drag any control in the tweaks panel to see token changes land here and inside the connected variation above. Every visual value — font, size, colour, spacing, radius — comes from a CSS custom property defined in tokens.json.</p>
+          <aside class="editorial-aside">
+            <div class="aside-block">
+              <p class="mono-label">type</p>
+              <p class="aside-demo aside-type">Aa</p>
+              <p class="aside-meta">heading: var(--tv-font-heading) · body: var(--tv-font-body)</p>
+            </div>
+            <div class="aside-block">
+              <p class="mono-label">radius</p>
+              <div class="aside-radius-demo"></div>
+              <p class="aside-meta">var(--tv-radius) · var(--tv-border-width)</p>
+            </div>
+            <div class="aside-block">
+              <p class="mono-label">spacing</p>
+              <div class="aside-spacing-demo">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <p class="aside-meta">unit: var(--tv-space-unit)</p>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -322,31 +335,92 @@ const description = 'Connect your generated frontends, preview them live, tune t
     line-height: var(--tv-h1-leading);
   }
 
-  .services-grid {
+  .editorial-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin: calc(var(--tv-space-unit) * 6) 0;
+    grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
+    gap: calc(var(--tv-space-unit) * 12);
+    align-items: start;
+    margin-top: calc(var(--tv-space-unit) * 6);
   }
 
-  .service-card {
-    background: var(--tv-surface);
-    border: var(--tv-border-width) solid var(--tv-border);
-    border-radius: var(--tv-radius);
-    padding: calc(var(--tv-space-unit) * 6);
-  }
-  .service-card h3 {
-    font-family: var(--tv-font-heading);
-    margin: calc(var(--tv-space-unit) * 2) 0;
-  }
-  .service-card p {
-    color: var(--tv-fg-muted);
-  }
-
-  .measure-block {
+  .editorial-main {
     max-width: var(--tv-measure);
   }
-  .measure-block p {
+  .editorial-main p {
+    color: var(--tv-fg-muted);
     margin-bottom: calc(var(--tv-space-unit) * 4);
+    line-height: var(--tv-body-leading);
+  }
+
+  .pull-quote {
+    margin: calc(var(--tv-space-unit) * 6) 0;
+    padding-left: calc(var(--tv-space-unit) * 5);
+    border-left: var(--tv-border-width) solid var(--tv-accent);
+    font-family: var(--tv-font-heading);
+    font-size: calc(var(--tv-body-size) * 1.4);
+    line-height: var(--tv-h1-leading);
+    color: var(--tv-fg);
+  }
+
+  .editorial-aside {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 6);
+    position: sticky;
+    top: calc(var(--tv-space-unit) * 6);
+  }
+
+  .aside-block {
+    border: var(--tv-border-width) solid var(--tv-border);
+    border-radius: var(--tv-radius);
+    background: var(--tv-surface);
+    padding: calc(var(--tv-space-unit) * 5);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 3);
+  }
+
+  .aside-demo {
+    margin: 0;
+  }
+  .aside-type {
+    font-family: var(--tv-font-heading);
+    font-size: calc(var(--tv-h1-size) * 0.67);
+    font-weight: var(--tv-h1-weight);
+    line-height: 1;
+    color: var(--tv-fg);
+  }
+
+  .aside-radius-demo {
+    width: 100%;
+    height: 3rem;
+    background: var(--tv-accent);
+    border-radius: var(--tv-radius);
+    border: var(--tv-border-width) solid var(--tv-border);
+  }
+
+  .aside-spacing-demo {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--tv-space-unit);
+    height: 3rem;
+  }
+  .aside-spacing-demo span {
+    display: block;
+    width: calc(var(--tv-space-unit) * 4);
+    background: var(--tv-fg-muted);
+  }
+  .aside-spacing-demo span:nth-child(1) { height: 40%; }
+  .aside-spacing-demo span:nth-child(2) { height: 60%; }
+  .aside-spacing-demo span:nth-child(3) { height: 80%; }
+  .aside-spacing-demo span:nth-child(4) { height: 100%; }
+
+  .aside-meta {
+    margin: 0;
+    font-family: var(--tv-font-mono);
+    font-size: 0.6875rem;
+    color: var(--tv-fg-muted);
+    line-height: 1.4;
   }
 
   /* --- TOKEN STRESS TEST --- */
@@ -428,7 +502,13 @@ const description = 'Connect your generated frontends, preview them live, tune t
       grid-template-columns: 1fr;
       padding: calc(var(--tv-space-unit) * 4);
     }
-    .services-grid,
+    .editorial-grid {
+      grid-template-columns: 1fr;
+      gap: calc(var(--tv-space-unit) * 8);
+    }
+    .editorial-aside {
+      position: static;
+    }
     .stress-grid {
       grid-template-columns: 1fr;
     }

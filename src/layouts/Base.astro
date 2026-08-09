@@ -11,6 +11,10 @@ const { title = 'taste-vault', description = 'A vault of aesthetic references an
 
 // Astro resolves the configured `base` path here — "/" locally, "/taste-vault/" on Pages.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+// Current-path detection for nav state. `pathname` already includes the base.
+const path = Astro.url.pathname
+const on = (p: string) => path.startsWith(`${base}${p}`)
 ---
 
 <!doctype html>
@@ -40,15 +44,39 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
   <body>
     <header class="tv-header">
       <a href={`${base}/`} class="tv-wordmark">taste&#8209;vault</a>
-      <nav>
-        <a href={`${base}/library`}>library</a>
-        <a href={`${base}/generate`}>generate</a>
-        <a href={`${base}/reference`}>reference</a>
+      <nav aria-label="workflow">
+        <a href={`${base}/library`} aria-current={on('/library') ? 'page' : undefined}>
+          <span class="tv-nav-num" aria-hidden="true">01</span>library
+        </a>
+        <a href={`${base}/generate`} aria-current={on('/generate') ? 'page' : undefined}>
+          <span class="tv-nav-num" aria-hidden="true">02</span>generate
+        </a>
+        <a href={`${base}/reference`} aria-current={on('/reference') ? 'page' : undefined}>
+          <span class="tv-nav-num" aria-hidden="true">03</span>reference
+        </a>
       </nav>
     </header>
     <main>
       <slot />
     </main>
+    <footer class="tv-footer">
+      <p class="tv-footer-mark">taste&#8209;vault<span class="tv-footer-dot">.</span></p>
+      <div class="tv-footer-aside">
+        <nav class="tv-footer-flow" aria-label="the loop">
+          <a href={`${base}/library`}>library</a>
+          <span class="tv-footer-arrow" aria-hidden="true">→</span>
+          <a href={`${base}/generate`}>generate</a>
+          <span class="tv-footer-arrow" aria-hidden="true">→</span>
+          <a href={`${base}/reference`}>reference</a>
+          <span class="tv-footer-arrow" aria-hidden="true">→</span>
+          <span class="tv-footer-final">export</span>
+        </nav>
+        <p class="tv-footer-meta">
+          a design-token playground — set in var(--tv-font-mono), coloured by
+          var(--tv-accent), spaced by var(--tv-space-unit)
+        </p>
+      </div>
+    </footer>
     <slot name="after" />
   </body>
 </html>
@@ -61,25 +89,53 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
     gap: calc(var(--tv-space-unit) * 4);
     padding: calc(var(--tv-space-unit) * 4) calc(var(--tv-space-unit) * 8);
     border-bottom: var(--tv-border-width) solid var(--tv-border);
+    background: var(--tv-surface);
     font-family: var(--tv-font-mono);
     font-size: 0.8125rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  /* The wordmark carries a live accent chip — drag Accent in the tweaks panel
+     and the nav mark repaints too. */
   .tv-header .tv-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--tv-space-unit) * 2);
     color: var(--tv-fg);
     text-decoration: none;
+  }
+  .tv-header .tv-wordmark::before {
+    content: "";
+    width: 0.7em;
+    height: 0.7em;
+    flex-shrink: 0;
+    background: var(--tv-accent);
+    border-radius: calc(var(--tv-radius) * 0.5);
   }
   .tv-header nav {
     display: flex;
     gap: calc(var(--tv-space-unit) * 5);
   }
   .tv-header nav a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: calc(var(--tv-space-unit) * 1.5);
     color: var(--tv-fg-muted);
     text-decoration: none;
+    padding-bottom: calc(var(--tv-space-unit) * 1);
+    border-bottom: var(--tv-border-width) solid transparent;
+  }
+  /* Nav items are numbered like the workflow steps they represent. */
+  .tv-header nav .tv-nav-num {
+    color: var(--tv-accent);
+    font-size: 0.625rem;
   }
   .tv-header nav a:hover {
-    color: var(--tv-accent);
+    color: var(--tv-fg);
+  }
+  .tv-header nav a[aria-current="page"] {
+    color: var(--tv-fg);
+    border-bottom-color: var(--tv-accent);
   }
   main {
     padding: calc(var(--tv-space-unit) * 6) calc(var(--tv-space-unit) * 8);
@@ -99,6 +155,71 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
   body:has(.tv-panel:not(.tv-panel--closed)) .tv-header {
     padding-right: 340px;
   }
+
+  /* --- global footer: wordmark + the loop, end of every page --- */
+  .tv-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: calc(var(--tv-space-unit) * 8);
+    margin-top: calc(var(--tv-space-unit) * 12);
+    padding: calc(var(--tv-space-unit) * 8);
+    border-top: var(--tv-border-width) solid var(--tv-border);
+  }
+  .tv-footer-mark {
+    margin: 0;
+    font-family: var(--tv-font-heading);
+    font-size: calc(var(--tv-h1-size) * 0.6);
+    font-weight: var(--tv-h1-weight);
+    letter-spacing: var(--tv-h1-tracking);
+    line-height: 1;
+    color: var(--tv-fg);
+  }
+  .tv-footer-dot {
+    color: var(--tv-accent);
+  }
+  .tv-footer-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: calc(var(--tv-space-unit) * 2);
+  }
+  .tv-footer-flow {
+    display: flex;
+    align-items: baseline;
+    gap: calc(var(--tv-space-unit) * 2);
+    font-family: var(--tv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tv-footer-flow a {
+    color: var(--tv-fg-muted);
+    text-decoration: none;
+  }
+  .tv-footer-flow a:hover {
+    color: var(--tv-accent);
+  }
+  .tv-footer-arrow {
+    color: var(--tv-fg-muted);
+    opacity: 0.5;
+  }
+  .tv-footer-final {
+    color: var(--tv-accent);
+  }
+  .tv-footer-meta {
+    margin: 0;
+    font-family: var(--tv-font-mono);
+    font-size: 0.6875rem;
+    color: var(--tv-fg-muted);
+    max-width: 44ch;
+    text-align: right;
+  }
+  /* Keep the footer clear of the open tweaks drawer, same as <main>. */
+  body:has(.tv-panel:not(.tv-panel--closed)) .tv-footer {
+    padding-right: 340px;
+  }
+
   /* Narrow screens can't spare 340px — let the header wrap instead. */
   @media (max-width: 720px) {
     .tv-header {
@@ -111,6 +232,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
     }
     main:has(.tv-panel) {
       padding-right: calc(var(--tv-space-unit) * 8);
+    }
+    .tv-footer {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .tv-footer-aside {
+      align-items: flex-start;
+    }
+    .tv-footer-meta {
+      text-align: left;
     }
   }
   a {

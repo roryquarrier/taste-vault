@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import PromptBuilder from '../components/react/PromptBuilder.tsx'
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 const families = await getCollection('families')
 const entries = await getCollection('inspirations', ({ data }) => !data.draft)
 
@@ -36,14 +38,46 @@ const inspirationData = entries.map(e => {
 ---
 
 <Base title="generate · taste-vault" description="Build a master design prompt from the library.">
-  <section style="display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 6)">
-    <header>
-      <h1 class="text-h1 tracking-h1 leading-h1 font-heading">Generate</h1>
-      <p class="text-body leading-body text-fg-muted" style="max-width: var(--tv-measure)">
-        Fill in your product details and pick aesthetic directions from the library.
-        Copy the generated prompt into your AI tool — one shot, five variations, no AI slop.
+  <section class="generate-page">
+    <div class="generate-intro">
+      <h1 class="generate-title text-h1 tracking-h1 leading-h1 font-heading">Generate</h1>
+      <p class="generate-lede">
+        Step two of the loop. Fill in your product details and pick aesthetic directions
+        from the <a href={`${base}/library`} class="generate-link">library</a> — the builder
+        folds them into a single master brief with explicit instructions to avoid the usual
+        AI tells. Copy it into your AI frontend tool and get five committed variations in one shot.
       </p>
-    </header>
+    </div>
     <PromptBuilder client:load families={familyData} inspirations={inspirationData} />
   </section>
 </Base>
+
+<style>
+  .generate-page {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 8);
+  }
+  .generate-intro {
+    max-width: var(--tv-measure);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 4);
+  }
+  .generate-title {
+    margin: 0;
+  }
+  .generate-lede {
+    margin: 0;
+    color: var(--tv-fg-muted);
+    line-height: var(--tv-body-leading);
+  }
+  .generate-link {
+    color: var(--tv-accent);
+    text-decoration: none;
+    border-bottom: var(--tv-border-width) solid var(--tv-accent);
+  }
+  .generate-link:hover {
+    opacity: 0.85;
+  }
+</style>

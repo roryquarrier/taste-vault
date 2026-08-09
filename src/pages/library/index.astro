@@ -5,9 +5,10 @@ import LibraryBrowser from '../../components/react/LibraryBrowser'
 import IngestForm from '../../components/react/IngestForm.tsx'
 import { toCardData, familyIdOf } from '../../lib/cards'
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 const families = await getCollection('families')
 const familyNames = new Map(families.map((f) => [f.id, f.data.name]))
-
 const entries = await getCollection('inspirations', ({ data }) => !data.draft)
 const cards = await Promise.all(
   entries.map((e) => toCardData(e, familyNames.get(familyIdOf(e)) ?? familyIdOf(e))),
@@ -20,14 +21,38 @@ const familyMeta = families
 ---
 
 <Base title="library · taste-vault" description="Every aesthetic reference in the vault.">
-  <section style="display:flex; flex-direction:column; gap:calc(var(--tv-space-unit) * 6)">
-    <header>
-      <h1 class="text-h1 tracking-h1 leading-h1 font-heading">Library</h1>
-      <p class="text-body leading-body text-fg-muted" style="max-width: var(--tv-measure)">
-        {cards.length} references across {familyMeta.length} aesthetic families.
+  <section class="library-page">
+    <div class="library-intro">
+      <h1 class="library-title text-h1 tracking-h1 leading-h1 font-heading">Library</h1>
+      <p class="library-lede">
+        {cards.length} references across {familyMeta.length} aesthetic families. Each one
+        carries the vocabulary, palette, and guardrails a generator needs to reproduce it.
+        Shortlist what fits, send it to the prompt builder, and the brief assembles itself.
       </p>
-    </header>
+    </div>
     <IngestForm client:load families={familyMeta} />
     <LibraryBrowser client:load cards={cards} families={familyMeta} />
   </section>
 </Base>
+
+<style>
+  .library-page {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 8);
+  }
+  .library-intro {
+    max-width: var(--tv-measure);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--tv-space-unit) * 4);
+  }
+  .library-title {
+    margin: 0;
+  }
+  .library-lede {
+    margin: 0;
+    color: var(--tv-fg-muted);
+    line-height: var(--tv-body-leading);
+  }
+</style>
