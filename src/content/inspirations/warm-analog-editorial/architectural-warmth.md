@@ -6,7 +6,8 @@ description: Luxury real estate brand identity blending warm earthy tones with g
 vocabulary: [warm earthy palette, architectural geometry, tactile materiality, premium restraint, refined neutrals, confident whitespace, considered detail]
 alt: Architectural Warmth — Nordhive luxury real estate branding reference
 publishAsset: true
-thumb: /inspirations/warm-analog-editorial/warm-analog-editorial.png
+thumb: /inspirations/warm-analog-editorial/architectural-warmth.jpg
+full: /inspirations/warm-analog-editorial/architectural-warmth.jpg
 source:
   url: https://dribbble.com/shots/27634371-Luxury-Real-Estate-Branding
   author: Bato
